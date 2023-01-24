@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { Button } from "antd";
 import Layout from '@/components/layout/Layout';
 import ArrowLink from '@/components/links/ArrowLink';
 import ButtonLink from '@/components/links/ButtonLink';
@@ -43,6 +43,8 @@ export default function HomePage() {
               </ArrowLink>
             </p>
 
+            <Button type="primary">Primary Button</Button>
+
             <ButtonLink className='mt-6' href='/components' variant='light'>
               See all components
             </ButtonLink>
@@ -72,3 +74,4 @@ export default function HomePage() {
     </Layout>
   );
 }
+

@@ -7,6 +7,15 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
 
+  serverRuntimeConfig: {
+    notion_api_token: process.env.NEXT_NOTION_API_SECRET,
+
+    //TODO: Create an async server config that fetch data from notion
+    calendarOptions: {
+      slotSize: 15, // Slot size in minutes
+    }
+  },
+
   // Uncoment to add domain whitelist
   // images: {
   //   domains: [

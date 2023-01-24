@@ -12,7 +12,7 @@ export default function Document() {
           crossOrigin='anonymous'
         />
       </Head>
-      <body>
+      <body className="bg-gradient-to-r from-fuchsia-400 via-violet-900 to-indigo-500">
         <Main />
         <NextScript />
       </body>
