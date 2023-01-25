@@ -1,33 +1,53 @@
-import { Calendar } from 'antd';
-import type { CalendarMode } from 'antd/es/calendar/generateCalendar';
-import { Dayjs } from 'dayjs';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import dayjs from 'dayjs';
+import dayLocaleData from 'dayjs/plugin/localeData';
+import { useState } from 'react';
+
+import CalendarStep from '@/components/events/form/CalendarStep';
+import CustomerStep from '@/components/events/form/CustomerStep';
+import ResumeStep from '@/components/events/form/ResumeStep';
+
+dayjs.extend(dayLocaleData);
 
 interface Props {
   event: any;
 }
 
 const EventForm = ({ event }: Props) => {
-  const onPanelChange = (value: Dayjs, mode: CalendarMode) => {
-    console.log(value.format('YYYY-MM-DD'), mode);
-  };
+  const [data, setData] = useState<any>({
+    eventId: event.id,
+  });
+  const [step, setStep] = useState<string>('calendar');
 
   return (
-    <div className='mx-auto my-8 w-[800px]'>
-      <div className='bodergray-200 rounded-lg border bg-white p-4 shadow-lg'>
-        <div className='grid grid-cols-12 gap-2'>
-          <div className='col-span-12'>
-            <h1>
-              {event.properties.Name.title
-                .map((o: any) => o.plain_text)
-                .join(' ')}
-            </h1>
-          </div>
-          <div className='col-span-6'>
-            <Calendar fullscreen={false} onPanelChange={onPanelChange} />
-          </div>
-          <div className='col-span-6'></div>
-        </div>
-      </div>
+    <div className=''>
+      {step === 'calendar' && (
+        <CalendarStep
+          event={event}
+          onSubmit={(values) => {
+            setData({
+              ...data,
+              ...values,
+            });
+            setStep('customer');
+          }}
+        />
+      )}
+      {step === 'customer' && (
+        <CustomerStep
+          event={event}
+          data={data}
+          onStep={(step) => setStep(step)}
+          onSubmit={(values) => {
+            setData({
+              ...data,
+              ...values,
+            });
+            setStep('resume');
+          }}
+        />
+      )}
+      {step === 'resume' && <ResumeStep event={event} data={data} />}
     </div>
   );
 };

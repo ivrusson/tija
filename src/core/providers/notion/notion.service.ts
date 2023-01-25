@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Client } from '@notionhq/client';
+import { APIErrorCode, Client } from '@notionhq/client';
 import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import getConfig from 'next/config';
 import { Service, ServiceNotFoundError } from 'typedi';
@@ -12,6 +12,29 @@ export class NotionProvider {
   constructor() {
     const { serverRuntimeConfig } = getConfig();
     this.client = new Client({ auth: serverRuntimeConfig.notion_api_token });
+  }
+
+  public queryDatabase() {
+    try {
+      const results = this.client.databases.query({
+        database_id: 'b0301813641c4dd58360790386f5fae2',
+        // filter: {
+        //   property: 'Landmark',
+        //   rich_text: {
+        //     contains: 'Bridge',
+        //   },
+        // },
+      });
+      return results;
+    } catch (err: any) {
+      if (err.code === APIErrorCode.ObjectNotFound) {
+        //
+        // For example: handle by asking the user to select a different database
+        //
+      } else {
+        // Other error handling code
+      }
+    }
   }
 
   public async getPage(pageId: string): Promise<any> {
@@ -64,5 +87,9 @@ export class NotionProvider {
     } catch (err) {
       throw new ServiceNotFoundError('notion');
     }
+  }
+
+  public async createPage(data: any): Promise<any> {
+    return await this.client.pages.create(data);
   }
 }

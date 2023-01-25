@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import dayjs, { Dayjs } from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+dayjs.extend(utc);
+
 type OpenGraphType = {
   siteName: string;
   description: string;
@@ -38,4 +43,70 @@ export function getFromSessionStorage(key: string): string | null {
     return sessionStorage.getItem(key);
   }
   return null;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function calendarLinkGanerator(type: 'google' | 'outlook', data: any) {
+  const types: any = {
+    google: {
+      dateFormat: 'YYYYMMDDTHHmm00Z',
+      urlPattern:
+        'https://calendar.google.com/calendar/render?action=TEMPLATE&dates=[DATES]&details=[DESCRIPTION]&location=[LOCATION]&text=[TITLE]',
+    },
+    outlook: {
+      dateFormat: 'YYYY-MM-DDTHH:mm:00+00:00',
+      urlPattern:
+        'https://outlook.live.com/calendar/0/deeplink/compose?body=[DESCRIPTION][DATE]&location=[LOCATION]&path=%2Fcalendar%2Faction%2Fcompose&rru=addevent&subject=[TITLE]',
+    },
+  };
+
+  let url = '';
+  const format = types[type];
+
+  if (!format) return url;
+
+  switch (type) {
+    case 'google':
+      {
+        url = format.urlPattern;
+        url = url.replace('[TITLE]', data.event.title || '');
+        url = url.replace('[DESCRIPTION]', data.event.description || '');
+        url = url.replace('[LOCATION]', data.event.location || '');
+        const date = dayjs.utc(data.currentTime);
+        url = url.replace(
+          '[DATES]',
+          date.format(format.dateFormat) +
+            '/' +
+            date
+              .clone()
+              .add(data.event.duration || 0, 'm')
+              .format(format.dateFormat)
+        );
+      }
+      break;
+    case 'outlook':
+      {
+        url = url.replace('[TITLE]', data.event.title || '');
+        url = url.replace('[DESCRIPTION]', data.event.description || '');
+        url = url.replace('[LOCATION]', data.event.location || '');
+        const date = dayjs.utc(data.currentTime);
+        url = url.replace(
+          '[DATES]',
+          '&startdt=' +
+            date.format(format.dateFormat) +
+            '&enddt=' +
+            date
+              .clone()
+              .add(data.event.duration || 0, 'm')
+              .format(format.dateFormat)
+        );
+      }
+      break;
+    default:
+  }
+  return url;
+}
+
+export function dateToUtc(date: string | Date | Dayjs): string {
+  return dayjs(date).clone().utc().format();
 }

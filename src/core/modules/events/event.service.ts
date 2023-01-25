@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from 'typedi';
 
 import { EventRepository } from './event.repository';
@@ -15,6 +16,10 @@ export class EventService {
   }
   async getCalendar(eventId: string): Promise<any> {
     const result = await this.eventRepository.getEvent(eventId);
+    return result;
+  }
+  async createBooking(data: any): Promise<any> {
+    const result = await this.eventRepository.createBooking(data);
     return result;
   }
 }

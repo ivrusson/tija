@@ -88,7 +88,7 @@ describe('scheduler service test', () => {
     TEST_WORKING_PLANS
   );
 
-  it('should return and array of hours', () => {
+  it('should return and array of times', () => {
     const START_DATE_STR = '2023-01-10 10:00';
     const END_DATE_STR = '2023-01-15 12:00';
 
@@ -103,9 +103,9 @@ describe('scheduler service test', () => {
       '11:45',
     ];
 
-    const hours = schedulerService.buildHours(START_DATE_STR, END_DATE_STR);
+    const times = schedulerService.buildHours(START_DATE_STR, END_DATE_STR);
 
-    expect(hours).toEqual(EXPECTED_ARRAY);
+    expect(times).toEqual(EXPECTED_ARRAY);
   });
 
   it('should return a valid date string', () => {
@@ -125,11 +125,11 @@ describe('scheduler service test', () => {
       startDate: START_DATE,
       endDate: END_DATE,
       dates: [
-        { date: '2023-01-10', hours: BASE_HOURS },
-        { date: '2023-01-11', hours: [] },
+        { date: '2023-01-10', times: BASE_HOURS },
+        { date: '2023-01-11', times: [] },
         {
           date: '2023-01-12',
-          hours: [
+          times: [
             '11:00',
             '11:15',
             '11:30',
@@ -140,9 +140,9 @@ describe('scheduler service test', () => {
             '13:45',
           ],
         },
-        { date: '2023-01-13', hours: BASE_HOURS },
-        { date: '2023-01-14', hours: [] }, // Is saturday and is disabled
-        { date: '2023-01-15', hours: [] }, // Is sunday and is disabled
+        { date: '2023-01-13', times: BASE_HOURS },
+        { date: '2023-01-14', times: [] }, // Is saturday and is disabled
+        { date: '2023-01-15', times: [] }, // Is sunday and is disabled
       ],
     };
 

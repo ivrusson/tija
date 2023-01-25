@@ -1,7 +1,3 @@
-interface Props {}
-
-const Base = ({}: Props) => {
+export const Base: React.FC = () => {
   return <div></div>;
 };
-
-export default Base;

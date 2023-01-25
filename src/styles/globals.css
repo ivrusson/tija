@@ -1,3 +1,47 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*@import "tailwindcss/base";*/
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import 'antd/dist/reset.css';
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
+
+:root {
+  font-family: 'Mulish', sans-serifportant;
+  color: rgb(55 65 81 / var(--tw-text-opacity)) !important;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  color: rgb(55 65 81 / var(--tw-text-opacity)) !important;
+  font-family: 'Mulish', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, div {
+  font-family: 'Mulish', sans-serif !important;
+}
+
+/* Selection color */
+
+::-moz-selection {
+  @apply text-purple-700 bg-purple-300;
+}
+
+::selection {
+  @apply text-purple-700 bg-purple-300;
+}
+
+/* Layout */
+.container {
+  @apply max-w-4xl;
+}
+
+/*
+  calendar
+*/
+
+.tj-picker-calendar .tj-picker-cell .tj-picker-cell-inner {
+  min-width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+

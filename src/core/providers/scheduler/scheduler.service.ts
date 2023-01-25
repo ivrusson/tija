@@ -54,7 +54,7 @@ export interface SchedulerBooking {
 
 export type SchedulerItem = {
   date: string;
-  hours: string[];
+  times: string[];
 };
 
 export type Scheduler = {
@@ -90,7 +90,7 @@ export class SchedulerService {
   }
 
   public async getScheduler(): Promise<Scheduler> {
-    // First wee need to build Open and global hours
+    // First wee need to build Open and global times
     const openDates = await this.getOpenSchedulerItems();
     const overrideDates = await this.getOverrideSchedulerItems();
     const closedDates = await this.getClosedDates();
@@ -99,7 +99,7 @@ export class SchedulerService {
       if (closedDates.includes(item.date)) {
         return {
           ...item,
-          hours: [],
+          times: [],
         };
       }
       const override = overrideDates.find(
@@ -149,9 +149,9 @@ export class SchedulerService {
         return [];
       }
 
-      const hours = this.geWorkingHours(plan?.Dates, plan?.Break);
+      const times = this.geWorkingHours(plan?.Dates, plan?.Break);
 
-      // Insert valid hours to each day
+      // Insert valid times to each day
       for (let i = 0; i < datesArray.length; i++) {
         const day = datesArray[i];
         if (isOverride) {
@@ -159,7 +159,7 @@ export class SchedulerService {
           if (startDate === day) {
             items.push({
               date: this.getDateString(day),
-              hours: hours,
+              times: times,
             });
           }
         } else {
@@ -170,7 +170,7 @@ export class SchedulerService {
           const isDayAllowed = allowedDays.includes(new Date(day).getDay());
           items.push({
             date: this.getDateString(day),
-            hours: isDayAllowed ? hours : [],
+            times: isDayAllowed ? times : [],
           });
         }
       }
@@ -206,29 +206,29 @@ export class SchedulerService {
     dates: NotionFieldDate | EmptyValue,
     breaks: NotionFieldDate | EmptyValue
   ) {
-    let hours: string[] = [];
+    let times: string[] = [];
     let disabledDates: string[] = [];
 
-    // Build array of Dates hours
+    // Build array of Dates times
     if (dates) {
-      hours = this.buildHours(dates.start, dates.end);
+      times = this.buildHours(dates.start, dates.end);
     }
 
-    // Build array of disabled hours
+    // Build array of disabled times
     if (breaks) {
       disabledDates = this.buildHours(breaks.start, breaks.end);
     }
-    // Remove disabled hours from avaiable hours
-    hours = hours.filter((hour) => !disabledDates.includes(hour));
+    // Remove disabled times from avaiable times
+    times = times.filter((hour) => !disabledDates.includes(hour));
 
-    return hours;
+    return times;
   }
 
   public buildHours(
     startTime: string | EmptyValue,
     endTime: string | EmptyValue
   ): string[] {
-    // Must contain a valid date hours
+    // Must contain a valid date times
     if (!startTime || !endTime) {
       return [];
     }

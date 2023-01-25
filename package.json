@@ -18,22 +18,29 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.7",
     "@notionhq/client": "^2.2.3",
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
     "antd": "^5.1.6",
     "clsx": "^1.2.1",
     "dayjs": "^1.11.7",
+    "libphonenumber-js": "^1.10.18",
     "next": "^13.1.2",
     "next-api-decorators": "^2.0.1",
     "notion-client": "^6.15.6",
     "notion-types": "^6.15.6",
     "notion-utils": "^6.15.6",
     "path-to-regexp": "^6.2.1",
+    "postcss-import": "^15.1.0",
     "react": "^18.2.0",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "reflect-metadata": "^0.1.13",
     "tailwind-merge": "^1.8.1",
-    "typedi": "^0.10.0"
+    "typedi": "^0.10.0",
+    "uuidv4": "^6.2.13",
+    "xtendui": "^1.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.3.0",
@@ -44,6 +51,7 @@
     "@testing-library/react": "^13.4.0",
     "@types/jest": "^29.2.6",
     "@types/react": "^18.0.26",
+    "@types/react-custom-scrollbars": "^4.0.10",
     "@types/reflect-metadata": "^0.1.0",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",

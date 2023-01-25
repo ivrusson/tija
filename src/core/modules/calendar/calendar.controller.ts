@@ -8,13 +8,14 @@ export class CalendarController {
     private calendarService: CalendarService = Container.get(CalendarService)
   ) {}
 
-  @Get()
-  public foo() {
-    return this.calendarService.getAllCalendars();
-  }
-
-  @Get('/:eventId')
-  public details(@Param('eventId') eventId: string) {
-    return this.calendarService.getCalendar(eventId);
+  @Get('/:startDate/:endDate')
+  public details(
+    @Param('startDate') startDate: string,
+    @Param('endDate') endDate: string
+  ) {
+    return this.calendarService.getCalendar({
+      startDate,
+      endDate,
+    });
   }
 }

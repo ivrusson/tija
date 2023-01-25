@@ -4,8 +4,10 @@ import { createHandler } from 'next-api-decorators';
 import Container from 'typedi';
 import 'reflect-metadata';
 
-import {EventController} from '@/core/modules/events/event.controller';
-import {EventService} from '@/core/modules/events/event.service';
+import { CalendarController } from '@/core/modules/calendar/calendar.controller';
+import { CalendarService } from '@/core/modules/calendar/calendar.service';
+import { EventController } from '@/core/modules/events/event.controller';
+import { EventService } from '@/core/modules/events/event.service';
 
 export interface IProvider {
   name: string;
@@ -55,6 +57,11 @@ const tijaModule = TijaModule.getInstance([
     name: 'events',
     controller: EventController,
     service: Container.get(EventService),
+  },
+  {
+    name: 'calendar',
+    controller: CalendarController,
+    service: Container.get(CalendarService),
   },
 ]);
 
