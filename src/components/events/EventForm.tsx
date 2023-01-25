@@ -10,10 +10,11 @@ import ResumeStep from '@/components/events/form/ResumeStep';
 dayjs.extend(dayLocaleData);
 
 interface Props {
+  csrfToken: string;
   event: any;
 }
 
-const EventForm = ({ event }: Props) => {
+const EventForm = ({ csrfToken, event }: Props) => {
   const [data, setData] = useState<any>({
     eventId: event.id,
   });
@@ -23,6 +24,7 @@ const EventForm = ({ event }: Props) => {
     <div className=''>
       {step === 'calendar' && (
         <CalendarStep
+          csrfToken={csrfToken}
           event={event}
           onSubmit={(values) => {
             setData({
@@ -35,6 +37,7 @@ const EventForm = ({ event }: Props) => {
       )}
       {step === 'customer' && (
         <CustomerStep
+          csrfToken={csrfToken}
           event={event}
           data={data}
           onStep={(step) => setStep(step)}

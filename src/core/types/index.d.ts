@@ -22,3 +22,22 @@ export interface Event extends BaseEntity {
   Slug?: string;
   WorkingPlans?: WorkingPlan[];
 }
+
+type TijaRequest = {
+  csrfToken(): string;
+};
+
+export type NextTijaRequest = NextApiRequest & Request & TijaRequest;
+
+export type NextTijaResponse = NextApiResponse & Response;
+
+type TijaServerSideContext = GetServerSidePropsContext & { req: NextTijaRequest };
+
+export type TijaApiHandler = (
+  req: NextTijaRequest,
+  res: NextApiResponse
+) => Promise<void>;
+
+export type TijaServerSideHandler = (
+  context: TijaServerSideContext
+) => ReturnType<GetServerSideProps>;

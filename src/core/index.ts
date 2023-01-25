@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextApiRequest, NextApiResponse } from 'next';
 import { createHandler } from 'next-api-decorators';
 import Container from 'typedi';
 import 'reflect-metadata';
 
+import { BookingController } from '@/core/modules/bookings/booking.controller';
+import { BookingService } from '@/core/modules/bookings/booking.service';
 import { CalendarController } from '@/core/modules/calendar/calendar.controller';
 import { CalendarService } from '@/core/modules/calendar/calendar.service';
 import { EventController } from '@/core/modules/events/event.controller';
 import { EventService } from '@/core/modules/events/event.service';
+import { NextTijaRequest, NextTijaResponse } from '@/core/types';
 
 export interface IProvider {
   name: string;
@@ -31,7 +33,8 @@ export class TijaModule {
   }
 
   public router() {
-    return (req: NextApiRequest, res: NextApiResponse) => {
+    return async (req: NextTijaRequest, res: NextTijaResponse) => {
+      // await csrf(req, res);
       const { params = [] } = req.query;
       const mod = this.pMap.get(params[0]);
       if (mod) {
@@ -62,6 +65,11 @@ const tijaModule = TijaModule.getInstance([
     name: 'calendar',
     controller: CalendarController,
     service: Container.get(CalendarService),
+  },
+  {
+    name: 'bookings',
+    controller: BookingController,
+    service: Container.get(BookingService),
   },
 ]);
 

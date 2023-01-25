@@ -29,22 +29,31 @@ export const request = async ({
   return null;
 };
 
-export const getCalendar = async ({
-  startDate,
-  endDate,
-}: {
-  startDate: string;
-  endDate: string;
-}) => {
+export const getCalendar = async (
+  {
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  },
+  options: any
+) => {
   return await request({
     path: `/api/calendar/${startDate}/${endDate}`,
+    headers: {
+      'CSRF-Token': options.csrfToken,
+    },
   });
 };
 // eslint-disable-next-line unused-imports/no-unused-vars
-export const createBooking = async (data: any) => {
+export const createBooking = async (data: any, options: any) => {
   return await request({
     path: `/api/bookings`,
     method: 'POST',
     data,
+    headers: {
+      'CSRF-Token': options.csrfToken,
+    },
   });
 };

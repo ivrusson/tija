@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from 'typedi';
 
 import {
@@ -51,7 +52,7 @@ export class CalendarService {
   constructor(
     private configService: ConfigService,
     private readonly calendarRepository: CalendarRepository
-  ) {}
+  ) { }
   async getCalendar({
     startDate,
     endDate,

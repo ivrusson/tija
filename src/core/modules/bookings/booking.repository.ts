@@ -74,54 +74,55 @@ export class BookingRepository {
     try {
       const customer = await this.createCustomerFromBooking(data);
       const customerId = customer.id;
+      const booking = {
+        parent: {
+          type: 'database_id',
+          database_id: this.tijaConfig.DB_BOOKINGS,
+        },
+        properties: {
+          'Booking ID': {
+            title: [
+              {
+                text: {
+                  content: uuid(),
+                },
+              },
+            ],
+          },
+          Date: {
+            date: {
+              start: dayjs(data.startDate).format(
+                'YYYY-MM-DDTHH:mm:00.000+00:00'
+              ),
+              end: dayjs(data.endDate).format(
+                'YYYY-MM-DDTHH:mm:00.000+00:00'
+              ),
+              time_zone: null,
+            },
+          },
+          Status: {
+            status: {
+              name: 'Pending',
+            },
+          },
+          Customer: {
+            relation: [
+              {
+                id: customerId,
+              },
+            ],
+          },
+          Event: {
+            relation: [
+              {
+                id: data.eventId,
+              },
+            ],
+          },
+        },
+      };
       try {
-        const response = await this.notionProvider.createPage({
-          parent: {
-            type: 'database_id',
-            database_id: this.tijaConfig.DB_BOOKINGS,
-          },
-          properties: {
-            'Booking ID': {
-              title: [
-                {
-                  text: {
-                    content: uuid(),
-                  },
-                },
-              ],
-            },
-            Date: {
-              date: {
-                start: dayjs(data.startDate).format(
-                  'YYYY-MM-DDTHH:mm:00.000+00:00'
-                ),
-                end: dayjs(data.endDate).format(
-                  'YYYY-MM-DDTHH:mm:00.000+00:00'
-                ),
-                time_zone: null,
-              },
-            },
-            Status: {
-              status: {
-                name: 'Pending',
-              },
-            },
-            Customer: {
-              relation: [
-                {
-                  id: customerId,
-                },
-              ],
-            },
-            Booking: {
-              relation: [
-                {
-                  id: data.eventId,
-                },
-              ],
-            },
-          },
-        });
+        const response = await this.notionProvider.createPage(booking);
         return response;
       } catch (err) {
         return null;

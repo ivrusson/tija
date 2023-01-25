@@ -16,6 +16,7 @@ import { getFromNumber } from '@/components/events/utils';
 
 dayjs.extend(dayLocaleData);
 interface Props {
+  csrfToken: string;
   event: any;
   data: any;
   onSubmit: (data: any) => void;
@@ -24,7 +25,7 @@ interface Props {
 
 const dialCodes = getDialCodes();
 
-const CustomerStep = ({ event, data, onSubmit, onStep }: Props) => {
+const CustomerStep = ({ csrfToken, event, data, onSubmit, onStep }: Props) => {
   const [show, setShow] = useState<boolean>(false);
   const [submitting, setSubmitting] = useState<boolean>(false);
   const [form] = Form.useForm();
@@ -48,7 +49,7 @@ const CustomerStep = ({ event, data, onSubmit, onStep }: Props) => {
       ),
     };
 
-    const booking = await createBooking(bookingData);
+    const booking = await createBooking(bookingData, { csrfToken });
 
     if (booking) {
       onSubmit(values);

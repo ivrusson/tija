@@ -107,7 +107,8 @@ const timesFromDate = (date: Dayjs, dates: SchedulerItem[] = []) => {
   return times;
 };
 
-export const useCalendar = () => {
+export const useCalendar = (csrfToken: string) => {
+  console.log({ csrfToken });
   const [state, dispatch] = useReducer(calendarReducer, initialState);
 
   useEffect(() => {
@@ -115,10 +116,15 @@ export const useCalendar = () => {
       type: CalendarActionEnum.LOADING,
       payload: true,
     });
-    getCalendar({
-      startDate: state.startDate,
-      endDate: state.endDate,
-    }).then(({ dates }) => {
+    getCalendar(
+      {
+        startDate: state.startDate,
+        endDate: state.endDate,
+      },
+      {
+        csrfToken
+      }
+    ).then(({ dates }) => {
       dispatch({
         type: CalendarActionEnum.UPDATE_CALENDAR,
         payload: { dates },
@@ -153,10 +159,13 @@ export const useCalendar = () => {
         type: CalendarActionEnum.LOADING,
         payload: true,
       });
-      const { dates } = await getCalendar({
-        startDate: date.format(DATE_FORMAT),
-        endDate: date.endOf('month').format(DATE_FORMAT),
-      });
+      const { dates } = await getCalendar(
+        {
+          startDate: date.format(DATE_FORMAT),
+          endDate: date.endOf('month').format(DATE_FORMAT),
+        },
+        { csrfToken }
+      );
 
       dispatch({
         type: CalendarActionEnum.UPDATE_CALENDAR,

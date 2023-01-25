@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { GetServerSideProps } from 'next';
 import { ReactElement } from 'react';
 
 import EventForm from '@/components/events/EventForm';
@@ -7,18 +6,21 @@ import Layout from '@/components/layout/Layout';
 import Seo from '@/components/Seo';
 
 import { tijaService } from '@/core';
+import { csrf } from '@/core/csrf';
+import { withTijaSsr } from '@/core/routers';
 import { NextPageWithLayout } from '@/pages/_app';
 
 interface Props {
+  csrfToken: string;
   eventId: string;
   event: any;
 }
 
-const Event: NextPageWithLayout<Props> = ({ event }) => {
+const Event: NextPageWithLayout<Props> = ({ csrfToken, event }) => {
   return (
     <div className='page page-event min-h-full'>
       <Seo templateTitle='Event page' />
-      <EventForm event={event} />
+      <EventForm event={event} csrfToken={csrfToken} />
     </div>
   );
 };
@@ -27,14 +29,21 @@ Event.getLayout = (page: ReactElement) => {
   return <Layout>{page}</Layout>;
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { eventId } = context.query;
+export const getServerSideProps = withTijaSsr(async (context) => {
+  const { req, res, query } = context;
+  await csrf(req, res);
+
+  const { eventId } = query;
   const eventService = tijaService('events');
   const event = await eventService.getEvent(eventId);
-
+  const token = req.csrfToken();
   return {
-    props: { eventId, event },
+    props: {
+      csrfToken: token as string,
+      eventId,
+      event,
+    },
   };
-};
+});
 
 export default Event;

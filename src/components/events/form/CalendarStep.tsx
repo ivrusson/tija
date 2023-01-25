@@ -15,16 +15,17 @@ import Share from '@/components/events/Share';
 dayjs.extend(dayLocaleData);
 
 interface Props {
+  csrfToken: string;
   event: any;
   onSubmit: (data: any) => void;
 }
 
 const SAFE_DATE_FORMAT = 'YYYY-MM-DD';
 
-const CalendarStep = ({ event, onSubmit }: Props) => {
+const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
   const [show, setShow] = useState<boolean>(false);
   const { loading, times, currentDate, currentTime, updateDate, updateTime } =
-    useCalendar();
+    useCalendar(csrfToken);
 
   useEffect(() => {
     setShow(true);
