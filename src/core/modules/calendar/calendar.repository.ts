@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from 'typedi';
 
+import { ConfigService } from '@/core/config/config.service';
 import { NotionProvider } from '@/core/providers/notion/notion.service';
 
 @Service()

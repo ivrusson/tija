@@ -1638,7 +1638,7 @@
             {
               "type": "text",
               "text": {
-                "content": "DB_CUSTOMER",
+                "content": "DB_CUSTOMERS",
                 "link": null
               },
               "annotations": {
@@ -1649,7 +1649,7 @@
                 "code": false,
                 "color": "default"
               },
-              "plain_text": "DB_CUSTOMER",
+              "plain_text": "DB_CUSTOMERS",
               "href": null
             }
           ]

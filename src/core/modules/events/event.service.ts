@@ -18,8 +18,4 @@ export class EventService {
     const result = await this.eventRepository.getEvent(eventId);
     return result;
   }
-  async createBooking(data: any): Promise<any> {
-    const result = await this.eventRepository.createBooking(data);
-    return result;
-  }
 }

@@ -26,7 +26,7 @@ export class BookingRepository {
       const response = await this.notionProvider.createPage({
         parent: {
           type: 'database_id',
-          database_id: this.tijaConfig.DB_CUSTOMER,
+          database_id: this.tijaConfig.DB_CUSTOMERS,
         },
         properties: {
           'Full Name': {
