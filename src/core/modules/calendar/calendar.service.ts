@@ -54,11 +54,13 @@ export class CalendarService {
     private configService: ConfigService,
     private bookingRepository: BookingRepository,
     private readonly workingPlanRepository: WorkingPlanRepository
-  ) {}
+  ) { }
   async getCalendar({
+    eventId,
     startDate,
     endDate,
   }: {
+    eventId: string;
     startDate: string;
     endDate: string;
   }): Promise<any> {
@@ -81,7 +83,7 @@ export class CalendarService {
     startDate: string;
     endDate: string;
   }) {
-    const filter = {
+    const filters = {
       and: [
         {
           date: 'Date',
@@ -97,6 +99,35 @@ export class CalendarService {
         },
       ],
     };
-    this.bookingRepository.getBookings(filter);
+
+    try {
+      const response = await this.bookingRepository.getBookings(filters);
+      if (response.results && Array.isArray(response.results)) {
+        return response.results;
+      }
+    } catch (err) {
+      return [];
+    }
   }
+
+  async getCalendarWorkingPlans(eventId: string) {
+    const filters = {
+      filter: {
+        property: 'Events',
+        relations: [
+          { id: eventId }
+        ]
+      }
+    };
+
+    try {
+      const response = await this.workingPlanRepository.getWorkingPlans(filters);
+      if (response.results && Array.isArray(response.results)) {
+        return response.results;
+      }
+    } catch (err) {
+      return [];
+    }
+  }
+
 }
