@@ -1,4 +1,4 @@
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider } from 'antd';
 import { NextPage } from 'next';
 import { AppProps } from 'next/app';
 import { ReactElement, ReactNode } from 'react';
@@ -15,10 +15,10 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const { defaultAlgorithm, defaultSeed } = theme;
-const mapToken = defaultAlgorithm({
-  ...defaultSeed,
-});
+// const { defaultAlgorithm, defaultSeed } = theme;
+// const mapToken = defaultAlgorithm({
+//   ...defaultSeed,
+// });
 
 const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
   const getLayout = Component.getLayout || ((page) => page);

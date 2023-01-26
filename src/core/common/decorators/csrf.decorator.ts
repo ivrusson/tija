@@ -1,4 +1,3 @@
-
 import { createMiddlewareDecorator, NextFunction } from 'next-api-decorators';
 
 import { csrf } from '@/core/csrf';
@@ -9,4 +8,4 @@ export const CsrfToken = createMiddlewareDecorator(
     await csrf(req, res);
     next();
   }
-)
+);

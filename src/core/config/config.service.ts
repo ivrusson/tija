@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 
 @Service()
 export class ConfigService {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private config: any;
   constructor() {
     const { serverRuntimeConfig } = getConfig();

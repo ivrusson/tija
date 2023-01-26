@@ -1,5 +1,4 @@
-import { TijaApiHandler, TijaServerSideHandler } from "@/core/types";
-
+import { TijaApiHandler, TijaServerSideHandler } from '@/core/types';
 
 export function withTijaRoute<T extends TijaApiHandler>(handler: T) {
   return handler;

@@ -8,7 +8,7 @@ import { CalendarService } from './calendar.service';
 export class CalendarController {
   constructor(
     private calendarService: CalendarService = Container.get(CalendarService)
-  ) { }
+  ) {}
 
   @CsrfToken()
   @Get('/:startDate/:endDate')

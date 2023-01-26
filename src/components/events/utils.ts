@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export const getFromTitle = (property: any) => {
   return property.title.map((o: any) => o.plain_text).join(' ');
 };

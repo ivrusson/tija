@@ -31,7 +31,9 @@ export type NextTijaRequest = NextApiRequest & Request & TijaRequest;
 
 export type NextTijaResponse = NextApiResponse & Response;
 
-type TijaServerSideContext = GetServerSidePropsContext & { req: NextTijaRequest };
+type TijaServerSideContext = GetServerSidePropsContext & {
+  req: NextTijaRequest;
+};
 
 export type TijaApiHandler = (
   req: NextTijaRequest,

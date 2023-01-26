@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { APIErrorCode, Client } from '@notionhq/client';
-import { CreatePageParameters, CreatePageResponse, GetPageResponse, PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import { ConflictException, NotFoundException, UnauthorizedException } from 'next-api-decorators';
+import {
+  CreatePageParameters,
+  CreatePageResponse,
+  GetPageResponse,
+  PageObjectResponse,
+} from '@notionhq/client/build/src/api-endpoints';
+import {
+  ConflictException,
+  NotFoundException,
+  UnauthorizedException,
+} from 'next-api-decorators';
 import { Service } from 'typedi';
 
 import { ConfigService } from '@/core/config/config.service';
@@ -22,7 +31,7 @@ export class NotionProvider {
     const databaseName = parseKeyDatabase(databaseKey);
 
     if (!databaseId) {
-      throw new NotFoundException(`Database not found: ${databaseName}`)
+      throw new NotFoundException(`Database not found: ${databaseName}`);
     }
 
     try {
@@ -31,9 +40,13 @@ export class NotionProvider {
       return results;
     } catch (err: any) {
       if (err.code === APIErrorCode.ObjectNotFound) {
-        throw new NotFoundException(`Object not found in database: ${databaseName}`);
+        throw new NotFoundException(
+          `Object not found in database: ${databaseName}`
+        );
       } else {
-        throw new UnauthorizedException(`Action not permitted in database: ${databaseName}`);
+        throw new UnauthorizedException(
+          `Action not permitted in database: ${databaseName}`
+        );
       }
     }
   }
@@ -51,24 +64,26 @@ export class NotionProvider {
     return query;
   }
 
-  public async getPage(databaseKey: string, pageId: string): Promise<NotionPageResponse> {
-
+  public async getPage(
+    databaseKey: string,
+    pageId: string
+  ): Promise<NotionPageResponse> {
     const databaseId = this.configService.get(databaseKey) as string;
     const databaseName = parseKeyDatabase(databaseKey);
 
     if (!databaseId) {
-      throw new NotFoundException(`Database not found: ${databaseName}`)
+      throw new NotFoundException(`Database not found: ${databaseName}`);
     }
 
     try {
-      const page = await this.client.pages.retrieve({
+      const page = (await this.client.pages.retrieve({
         page_id: pageId,
-      }) as NotionPageResponse;
+      })) as NotionPageResponse;
 
       const parent = page.parent;
       if (
-        parent?.type === 'database_id'
-        && parent?.database_id === databaseId
+        parent?.type === 'database_id' &&
+        parent?.database_id === databaseId
       ) {
         return page;
       }
@@ -82,18 +97,21 @@ export class NotionProvider {
     databaseKey: string,
     pageId: string,
     relations?: string[]
-  ): Promise<NotionPageResponse & { relations: Promise<NotionPageResponse>[] }> {
+  ): Promise<
+    NotionPageResponse & { relations: Promise<NotionPageResponse>[] }
+  > {
     const databaseId = this.configService.get(databaseKey) as string;
     const databaseName = parseKeyDatabase(databaseKey);
 
     if (!databaseId) {
-      throw new NotFoundException(`Database not found: ${databaseName}`)
+      throw new NotFoundException(`Database not found: ${databaseName}`);
     }
 
     try {
-
       const page = await this.getPage(databaseKey, pageId);
-      const rels = Array.isArray(relations) ? findProperties(page, relations) : [];
+      const rels = Array.isArray(relations)
+        ? findProperties(page, relations)
+        : [];
 
       const rel_keys: string[] = Object.keys(rels);
 
@@ -124,16 +142,19 @@ export class NotionProvider {
         relations: rels,
       }; // TODO: return pageMapper(page);
     } catch (err) {
-      throw new NotFoundException(`Database not found: ${databaseName}`)
+      throw new NotFoundException(`Database not found: ${databaseName}`);
     }
   }
 
-  public async createPage(databaseKey: string, data: CreatePageParameters): Promise<CreatePageResponse> {
+  public async createPage(
+    databaseKey: string,
+    data: CreatePageParameters
+  ): Promise<CreatePageResponse> {
     const databaseId = this.configService.get(databaseKey) as string;
     const databaseName = parseKeyDatabase(databaseKey);
 
     if (!databaseId) {
-      throw new NotFoundException(`Database not found: ${databaseName}`)
+      throw new NotFoundException(`Database not found: ${databaseName}`);
     }
 
     try {
@@ -141,7 +162,9 @@ export class NotionProvider {
 
       return page;
     } catch (err) {
-      throw new ConflictException(`Error creating object for database: ${databaseName}`);
+      throw new ConflictException(
+        `Error creating object for database: ${databaseName}`
+      );
     }
   }
 }

@@ -108,7 +108,6 @@ const timesFromDate = (date: Dayjs, dates: SchedulerItem[] = []) => {
 };
 
 export const useCalendar = (csrfToken: string) => {
-  console.log({ csrfToken });
   const [state, dispatch] = useReducer(calendarReducer, initialState);
 
   useEffect(() => {
@@ -122,7 +121,7 @@ export const useCalendar = (csrfToken: string) => {
         endDate: state.endDate,
       },
       {
-        csrfToken
+        csrfToken,
       }
     ).then(({ dates }) => {
       dispatch({

@@ -1,7 +1,6 @@
-
 export type NotionRequestParent = {
-  type: 'database_id',
-  database_id: string,
+  type: 'database_id';
+  database_id: string;
 };
 
 export function fieldToParent(value: string): NotionRequestParent {
@@ -9,16 +8,16 @@ export function fieldToParent(value: string): NotionRequestParent {
     type: 'database_id',
     database_id: value,
   };
-};
+}
 
 export type NotionRequestTitleType = {
   title: [
     {
       text: {
-        content: string,
-      },
-    },
-  ],
+        content: string;
+      };
+    }
+  ];
 };
 
 export function fieldToTitle(value: string): NotionRequestTitleType {
@@ -31,16 +30,16 @@ export function fieldToTitle(value: string): NotionRequestTitleType {
       },
     ],
   };
-};
+}
 
 export type NotionRequestRichTextType = {
   rich_text: [
     {
       text: {
-        content: string,
-      },
-    },
-  ],
+        content: string;
+      };
+    }
+  ];
 };
 
 export function fieldToRichText(value: string): NotionRequestRichTextType {
@@ -53,12 +52,12 @@ export function fieldToRichText(value: string): NotionRequestRichTextType {
       },
     ],
   };
-};
+}
 
 export type NotionRequestSelectType = {
   select: {
-    name: string,
-  },
+    name: string;
+  };
 };
 
 export function fieldToSelect(value: string): NotionRequestSelectType {
@@ -67,12 +66,12 @@ export function fieldToSelect(value: string): NotionRequestSelectType {
       name: value,
     },
   };
-};
+}
 
 export type NotionRequestStatusType = {
   status: {
-    name: string,
-  },
+    name: string;
+  };
 };
 
 export function fieldToStatus(value: string): NotionRequestStatusType {
@@ -81,45 +80,45 @@ export function fieldToStatus(value: string): NotionRequestStatusType {
       name: value,
     },
   };
-};
+}
 
 export type NotionRequestEmailType = {
-  email: string,
+  email: string;
 };
 
 export function fieldToEmail(value: string): NotionRequestEmailType {
   return {
     email: value,
   };
-};
+}
 
 export type NotionRequestPhoneType = {
-  phone_number: string,
+  phone_number: string;
 };
 
 export function fieldToPhone(value: string): NotionRequestPhoneType {
   return {
     phone_number: value,
   };
-};
+}
 
 export type NotionRequestDate = {
   date: {
-    start: string,
-    end?: string,
-    time_zone?: string
-  }
+    start: string;
+    end?: string;
+    time_zone?: string;
+  };
 };
 
 export function fieldToDate(value: {
-  start: string,
-  end?: string,
-  time_zone?: string
+  start: string;
+  end?: string;
+  time_zone?: string;
 }): NotionRequestDate {
   return {
     date: value,
   };
-};
+}
 
 export type NotionSingleRelation = {
   id: string;
@@ -129,11 +128,13 @@ export type NotionRequestRelationType = {
   relation: NotionSingleRelation[];
 };
 
-export function fieldToRelations(values: NotionSingleRelation[]): NotionRequestRelationType {
+export function fieldToRelations(
+  values: NotionSingleRelation[]
+): NotionRequestRelationType {
   return {
     relation: values,
   };
-};
+}
 
 export const toNotionFields = {
   date: fieldToDate,

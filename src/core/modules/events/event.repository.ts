@@ -3,13 +3,9 @@ import { Service } from 'typedi';
 
 import { NotionProvider } from '@/core/providers/notion/notion.service';
 
-import { ConfigService } from '../../config/config.service';
-
 @Service()
 export class EventRepository {
-  constructor(
-    private notionProvider: NotionProvider
-  ) {}
+  constructor(private notionProvider: NotionProvider) {}
 
   async getEvents(filters: any, sort: any): Promise<any> {
     return this.notionProvider.queryDatabase('DB_EVENTS', filters, sort);

@@ -7,7 +7,7 @@ import { EventService } from '@/core/modules/events/event.service';
 export class EventController {
   constructor(
     private eventService: EventService = Container.get(EventService)
-  ) { }
+  ) {}
 
   @Get()
   public getEvents(@Query() filters: any, @Query() sort: any) {

@@ -54,7 +54,7 @@ export class CalendarService {
     private configService: ConfigService,
     private bookingRepository: BookingRepository,
     private readonly workingPlanRepository: WorkingPlanRepository
-  ) { }
+  ) {}
   async getCalendar({
     startDate,
     endDate,
@@ -82,20 +82,20 @@ export class CalendarService {
     endDate: string;
   }) {
     const filter = {
-      "and": [
+      and: [
         {
-          "date": "Date",
-          "number": {
-            "greater_than": startDate
-          }
+          date: 'Date',
+          number: {
+            greater_than: startDate,
+          },
         },
         {
-          "property": "Date",
-          "date": {
-            "lower_than": endDate
-          }
+          property: 'Date',
+          date: {
+            lower_than: endDate,
+          },
         },
-      ]
+      ],
     };
     this.bookingRepository.getBookings(filter);
   }

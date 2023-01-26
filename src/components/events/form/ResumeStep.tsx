@@ -6,7 +6,7 @@ import dayLocaleData from 'dayjs/plugin/localeData';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-import { calendarLinkGanerator, dateToUtc } from '@/lib/helper';
+import { calendarLinkGanerator } from '@/lib/helper';
 
 import { EventInfo } from '@/components/events/EventInfo';
 import {
@@ -36,17 +36,6 @@ const ResumeStep = ({ event, data }: Props) => {
       duration: getFromNumber(event.properties.Duration),
     },
   });
-
-  const sendData = {
-    ...data,
-    eventId: data.eventId,
-    startDate: dateToUtc(data.currentTime),
-    endDate: dateToUtc(
-      data.currentTime
-        .clone()
-        .add(getFromNumber(event.properties.Duration), 'm')
-    ),
-  };
 
   return (
     <Transition
@@ -104,8 +93,6 @@ const ResumeStep = ({ event, data }: Props) => {
                   Add to Google Calendar
                 </Button>
               </div>
-
-              {/* <div className='col-span-12'>{JSON.stringify(sendData, null, 2)}</div> */}
             </div>
           </div>
         </div>
