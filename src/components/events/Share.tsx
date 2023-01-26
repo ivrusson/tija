@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Input, InputRef, Modal } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FiCopy, FiLink, FiShare2, FiX } from 'react-icons/fi';
 
 import { EventInfo } from '@/components/events/EventInfo';
@@ -10,9 +10,16 @@ interface Props {
 }
 
 const Share: React.FC<Props> = ({ event }) => {
+  const [eventUrl, setEventUrl] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean>(false);
   const inputRef = useRef<InputRef | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      setEventUrl(window.location.href);
+    }
+  }, []);
 
   const handleCancel = () => {
     setOpen(false);
@@ -48,7 +55,7 @@ const Share: React.FC<Props> = ({ event }) => {
               ref={inputRef}
               style={{ width: 'calc(100% - 150px)' }}
               prefix={<FiLink className='text-gray-300' />}
-              value='http://demo.com'
+              value={eventUrl}
               readOnly={true}
               size='large'
             />

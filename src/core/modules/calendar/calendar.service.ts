@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from 'typedi';
 
+import { BookingRepository } from '@/core/modules/bookings/booking.repository';
+import { WorkingPlanRepository } from '@/core/modules/working-plans/working-plan.repository';
 import {
   SchedulerService,
   SchedulerWorkingPlan,
 } from '@/core/providers/scheduler/scheduler.service';
 
-import { CalendarRepository } from './calendar.repository';
 import { ConfigService } from '../../config/config.service';
 
 const mock: SchedulerWorkingPlan[] = [
@@ -51,7 +52,8 @@ const mock: SchedulerWorkingPlan[] = [
 export class CalendarService {
   constructor(
     private configService: ConfigService,
-    private readonly calendarRepository: CalendarRepository
+    private bookingRepository: BookingRepository,
+    private readonly workingPlanRepository: WorkingPlanRepository
   ) { }
   async getCalendar({
     startDate,
@@ -70,5 +72,31 @@ export class CalendarService {
     );
     const scheduler = schedulerService.getScheduler();
     return scheduler;
+  }
+
+  async getCalendarBookings({
+    startDate,
+    endDate,
+  }: {
+    startDate: string;
+    endDate: string;
+  }) {
+    const filter = {
+      "and": [
+        {
+          "date": "Date",
+          "number": {
+            "greater_than": startDate
+          }
+        },
+        {
+          "property": "Date",
+          "date": {
+            "lower_than": endDate
+          }
+        },
+      ]
+    };
+    this.bookingRepository.getBookings(filter);
   }
 }

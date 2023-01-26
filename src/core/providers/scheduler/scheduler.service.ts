@@ -83,10 +83,10 @@ export class SchedulerService {
     private bookings: SchedulerBooking[],
     private workinPlans: SchedulerWorkingPlan[]
   ) {
-    const serverRuntimeConfig = this.configService.get('serverRuntimeConfig');
-    const schedulerOptions = serverRuntimeConfig?.schedulerOptions;
-    this.slotSize = schedulerOptions?.slotSize || DEFAULT_SLOT_SIZE;
-    this.bufferSize = schedulerOptions?.bufferSize || DEFAULT_BUFFER_SIZE;
+    const slotSize = this.configService.get('SLOT_SIZE');
+    const bufferSize = this.configService.get('BUFFER_SIZE');
+    this.slotSize = slotSize ? parseInt(slotSize) : DEFAULT_SLOT_SIZE;
+    this.bufferSize = bufferSize ? parseInt(bufferSize) : DEFAULT_BUFFER_SIZE;
   }
 
   public async getScheduler(): Promise<Scheduler> {

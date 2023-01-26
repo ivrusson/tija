@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Get, Param } from 'next-api-decorators';
+import { Get, Param, Query } from 'next-api-decorators';
 import Container from 'typedi';
 
 import { EventService } from '@/core/modules/events/event.service';
@@ -7,11 +7,11 @@ import { EventService } from '@/core/modules/events/event.service';
 export class EventController {
   constructor(
     private eventService: EventService = Container.get(EventService)
-  ) {}
+  ) { }
 
   @Get()
-  public getEvents() {
-    return this.eventService.getAllEvents();
+  public getEvents(@Query() filters: any, @Query() sort: any) {
+    return this.eventService.getEvents(filters, sort);
   }
 
   @Get('/:eventId')

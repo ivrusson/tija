@@ -3,67 +3,33 @@ import dayjs from 'dayjs';
 import { Service } from 'typedi';
 import { uuid } from 'uuidv4';
 
+import { toNotionFields } from '@/core/providers/notion/helpers/valueToField';
 import { NotionProvider } from '@/core/providers/notion/notion.service';
 
-import { ConfigService } from '../../config/config.service';
 
 @Service()
 export class BookingRepository {
   private tijaConfig: any;
   constructor(
-    private notionProvider: NotionProvider,
-    private configservice: ConfigService
-  ) {
-    this.setConfig();
+    private notionProvider: NotionProvider
+  ) { }
+  async getBookings(filters?: any, sort?: any): Promise<any> {
+    return this.notionProvider.queryDatabase('DB_BOOKINGS', filters, sort);
   }
 
-  async setConfig() {
-    const serverRuntimeConfig = this.configservice.get('serverRuntimeConfig');
-    this.tijaConfig = await serverRuntimeConfig.tijaConfig;
-  }
   async createCustomerFromBooking(data: any): Promise<any> {
+    const customer = {
+      parent: toNotionFields.parent('DB_CUSTOMERS'),
+      properties: {
+        'Full Name': toNotionFields.title([data.firstName, data.lastName].join(' ')),
+        'First Name': toNotionFields.rich_text(data.firstName),
+        'Last Name': toNotionFields.rich_text(data.lastName),
+        'Email': toNotionFields.email(data.email),
+        'Phone': toNotionFields.phone(data.phone),
+      },
+    };
     try {
-      const response = await this.notionProvider.createPage({
-        parent: {
-          type: 'database_id',
-          database_id: this.tijaConfig.DB_CUSTOMERS,
-        },
-        properties: {
-          'Full Name': {
-            title: [
-              {
-                text: {
-                  content: [data.firstName, data.lastName].join(' '),
-                },
-              },
-            ],
-          },
-          'First Name': {
-            rich_text: [
-              {
-                text: {
-                  content: data.firstName,
-                },
-              },
-            ],
-          },
-          'Last Name': {
-            rich_text: [
-              {
-                text: {
-                  content: data.lastName,
-                },
-              },
-            ],
-          },
-          Email: {
-            email: data.email,
-          },
-          Phone: {
-            phone_number: [`+${data.prefix}`, data.phone].join(' '),
-          },
-        },
-      });
+      const response = await this.notionProvider.createPage('DB_CUSTOMERS', customer);
       return response;
     } catch (err) {
       return null;
@@ -75,54 +41,27 @@ export class BookingRepository {
       const customer = await this.createCustomerFromBooking(data);
       const customerId = customer.id;
       const booking = {
-        parent: {
-          type: 'database_id',
-          database_id: this.tijaConfig.DB_BOOKINGS,
-        },
+        parent: toNotionFields.parent(this.tijaConfig.DB_BOOKINGS),
         properties: {
-          'Booking ID': {
-            title: [
-              {
-                text: {
-                  content: uuid(),
-                },
-              },
-            ],
-          },
+          'Booking ID': toNotionFields.title(uuid()),
           Date: {
             date: {
-              start: dayjs(data.startDate).format(
-                'YYYY-MM-DDTHH:mm:00.000+00:00'
-              ),
-              end: dayjs(data.endDate).format(
-                'YYYY-MM-DDTHH:mm:00.000+00:00'
-              ),
-              time_zone: null,
-            },
+              start: dayjs(data.startDate).format('YYYY-MM-DDTHH:mm:00.000+00:00'),
+              end: dayjs(data.endDate).format('YYYY-MM-DDTHH:mm:00.000+00:00'),
+              time_zone: data.timeZone,
+            }
           },
-          Status: {
-            status: {
-              name: 'Pending',
-            },
-          },
-          Customer: {
-            relation: [
-              {
-                id: customerId,
-              },
-            ],
-          },
-          Event: {
-            relation: [
-              {
-                id: data.eventId,
-              },
-            ],
-          },
+          Status: toNotionFields.status('Pending'),
+          Customer: toNotionFields.relations([
+            { id: customerId, }
+          ]),
+          Event: toNotionFields.relations([
+            { id: data.eventId, },
+          ]),
         },
       };
       try {
-        const response = await this.notionProvider.createPage(booking);
+        const response = await this.notionProvider.createPage('DB_BOOKINGS', booking);
         return response;
       } catch (err) {
         return null;

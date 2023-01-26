@@ -34,7 +34,7 @@ Events.getLayout = (page: ReactElement) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const eventService = tijaService('events');
-  const events = await eventService.getAllEvents();
+  const events = await eventService.getEvents();
 
   return {
     props: { events: events.results },

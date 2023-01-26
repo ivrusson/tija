@@ -3,9 +3,13 @@ import { Service } from 'typedi';
 
 @Service()
 export class ConfigService {
-  private config;
+  private config: any;
   constructor() {
-    this.config = getConfig();
+    const { serverRuntimeConfig } = getConfig();
+    this.config = {
+      ...serverRuntimeConfig.notionConfig,
+      ...serverRuntimeConfig.tijaConfig,
+    };
   }
 
   public get(key: string) {

@@ -1,7 +1,7 @@
 import { Get, Param } from 'next-api-decorators';
 import Container from 'typedi';
 
-import { CsrfToken } from '@/core/decorators/csrf.decorator';
+import { CsrfToken } from '@/core/common/decorators/csrf.decorator';
 
 import { CalendarService } from './calendar.service';
 

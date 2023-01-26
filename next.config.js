@@ -35,7 +35,27 @@ const parseNotionConfig = (pages) => {
   return config;
 };
 
-const nextConfig = {
+const getTijaConfig = async () => {
+  const { Client } = await import('@notionhq/client');
+  const notion = new Client({ auth: process.env.NEXT_NOTION_API_SECRET });
+  const response = await notion.databases.query({
+    database_id: process.env.NOTION_GLOBAL_CONFIG_DB,
+    sorts: [
+      {
+        property: 'Type',
+        direction: 'ascending',
+      },
+    ],
+  });
+
+  if (response.results && Array.isArray(response.results)) {
+    const config = parseNotionConfig(response?.results);
+    return config;
+  }
+  return {};
+};
+
+module.exports = async () => ({
   eslint: {
     dirs: ['src'],
   },
@@ -44,32 +64,12 @@ const nextConfig = {
   swcMinify: true,
 
   serverRuntimeConfig: {
-    notion_api_token: process.env.NEXT_NOTION_API_SECRET,
-    notion_config_db: process.env.NOTION_GLOBAL_CONFIG_DB,
-
-    //TODO: Create an async server config that fetch data from notion
-    calendarOptions: {
-      slotSize: 15, // Slot size in minutes
+    notionConfig: {
+      notionApiToken: process.env.NEXT_NOTION_API_SECRET,
+      notionConfigDb: process.env.NOTION_GLOBAL_CONFIG_DB,
     },
-    tijaConfig: (async () => {
-      const { Client } = await import('@notionhq/client');
-      const notion = new Client({ auth: process.env.NEXT_NOTION_API_SECRET });
-      const response = await notion.databases.query({
-        database_id: process.env.NOTION_GLOBAL_CONFIG_DB,
-        sorts: [
-          {
-            property: 'Type',
-            direction: 'ascending',
-          },
-        ],
-      });
-
-      if (response.results && Array.isArray(response.results)) {
-        const config = parseNotionConfig(response?.results);
-        return config;
-      }
-      return null;
-    })(),
+    //TODO: Create an async server config that fetch data from notion
+    tijaConfig: await getTijaConfig(),
   },
 
   // Uncoment to add domain whitelist
@@ -97,6 +97,4 @@ const nextConfig = {
 
     return config;
   },
-};
-
-module.exports = nextConfig;
+})
