@@ -3,7 +3,7 @@ import { Transition } from '@headlessui/react';
 import { Button, Calendar, Spin } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import dayLocaleData from 'dayjs/plugin/localeData';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { RiArrowLeftLine, RiArrowRightLine } from 'react-icons/ri';
 
@@ -34,9 +34,9 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
     setShow(true);
   }, []);
 
-  const onDateChange = (value: Dayjs) => {
+  const onDateChange = useCallback((value: Dayjs) => {
     updateDate(value);
-  };
+  }, []);
 
   return (
     <Transition
@@ -98,6 +98,14 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
                 }}
                 fullscreen={false}
                 onChange={onDateChange}
+                disabledDate={(currentDate: Dayjs) => {
+                  if (
+                    currentDate.valueOf() > dayjs().subtract(1, 'd').valueOf()
+                  ) {
+                    return false;
+                  }
+                  return true;
+                }}
               />
               <div className='absolute right-0 top-0 h-full w-[1px] bg-gray-200' />
             </div>

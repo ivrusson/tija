@@ -1,16 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs, { Dayjs } from 'dayjs';
+import isToday from 'dayjs/plugin/isToday';
 import { useEffect, useReducer } from 'react';
 
 import { getCalendar } from '@/lib/api';
 
 import { SchedulerItem } from '../core/providers/scheduler/scheduler.service';
 
+dayjs.extend(isToday);
+
 enum CalendarActionEnum {
   LOADING = 'LOADING',
 
   UPDATE_CALENDAR = 'UPDATE_CALENDAR',
+  UPDATE_TIMES = 'UPDATE_TIMES',
   UPDATE_DATE = 'UPDATE_DATE',
   UPDATE_TIME = 'UPDATE_TIME',
 }
@@ -26,8 +30,11 @@ export interface CalendarState {
 }
 
 interface CalendarUpdatePayload {
-  dates?: SchedulerItem[];
-  times?: string[];
+  dates: SchedulerItem[];
+}
+
+interface TimesUpdatePayload {
+  times: string[];
 }
 
 interface CalendarDatePayload {
@@ -41,6 +48,7 @@ interface CalendarTimePayload {
 type CalendarAction =
   | { type: CalendarActionEnum.LOADING; payload: boolean }
   | { type: CalendarActionEnum.UPDATE_CALENDAR; payload: CalendarUpdatePayload }
+  | { type: CalendarActionEnum.UPDATE_TIMES; payload: TimesUpdatePayload }
   | { type: CalendarActionEnum.UPDATE_DATE; payload: CalendarDatePayload }
   | { type: CalendarActionEnum.UPDATE_TIME; payload: CalendarTimePayload };
 
@@ -57,10 +65,16 @@ const calendarReducer = (state: CalendarState, action: CalendarAction) => {
       };
     }
     case CalendarActionEnum.UPDATE_CALENDAR: {
-      const { dates, times } = action.payload;
+      const { dates } = action.payload;
       return {
         ...state,
-        dates: dates ? dates : state.dates,
+        dates: dates ? [...state.dates, ...dates] : state.dates,
+      };
+    }
+    case CalendarActionEnum.UPDATE_TIMES: {
+      const { times } = action.payload;
+      return {
+        ...state,
         times: times ? times : state.times,
       };
     }
@@ -69,7 +83,7 @@ const calendarReducer = (state: CalendarState, action: CalendarAction) => {
       return {
         ...state,
         startDate: date.format(DATE_FORMAT),
-        endDate: date.endOf('month').format(DATE_FORMAT),
+        endDate: date.clone().add(DAYS_TO_FETCH, 'd').format(DATE_FORMAT),
         currentDate: date,
         currentTime: null,
       };
@@ -147,7 +161,7 @@ export const useCalendar = ({
     const { dates, currentDate } = state;
     const times = timesFromDate(currentDate, dates);
     dispatch({
-      type: CalendarActionEnum.UPDATE_CALENDAR,
+      type: CalendarActionEnum.UPDATE_TIMES,
       payload: { times },
     });
   }, [state.dates, state.currentDate]);
@@ -159,31 +173,33 @@ export const useCalendar = ({
       payload: { date },
     });
 
-    const datesArray = dates.map(({ date }) => date);
-    if (!datesArray.includes(date.format(DATE_FORMAT))) {
-      dispatch({
-        type: CalendarActionEnum.LOADING,
-        payload: true,
-      });
-      const { dates } = await getCalendar(
-        {
-          eventId,
-          startDate: date.format(DATE_FORMAT),
-          endDate: date.endOf('month').format(DATE_FORMAT),
-        },
-        { csrfToken }
-      );
+    if (date.valueOf() > dayjs().valueOf()) {
+      const datesArray = dates.map(({ date }) => date);
+      if (!datesArray.includes(date.format(DATE_FORMAT))) {
+        dispatch({
+          type: CalendarActionEnum.LOADING,
+          payload: true,
+        });
+        const { dates } = await getCalendar(
+          {
+            eventId,
+            startDate: date.format(DATE_FORMAT),
+            endDate: date.clone().add(DAYS_TO_FETCH, 'd').format(DATE_FORMAT),
+          },
+          { csrfToken }
+        );
 
-      dispatch({
-        type: CalendarActionEnum.UPDATE_CALENDAR,
-        payload: { dates },
-      });
-
-      dispatch({
-        type: CalendarActionEnum.LOADING,
-        payload: false,
-      });
+        dispatch({
+          type: CalendarActionEnum.UPDATE_CALENDAR,
+          payload: { dates },
+        });
+      }
     }
+
+    dispatch({
+      type: CalendarActionEnum.LOADING,
+      payload: false,
+    });
   };
 
   const updateTime = async (time: Dayjs) => {
