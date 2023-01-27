@@ -8,7 +8,7 @@ import { BookingService } from '@/core/modules/bookings/booking.service';
 export class BookingController {
   constructor(
     private bookingService: BookingService = Container.get(BookingService)
-  ) {}
+  ) { }
 
   @CsrfToken()
   @Post()

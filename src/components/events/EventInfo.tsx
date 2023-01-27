@@ -1,18 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { RiTimeLine } from 'react-icons/ri';
 
 import {
   getFromNumber,
+  getFromNumberToPrice,
   getFromRichText,
   getFromTitle,
+  containsProduct,
 } from '@/components/events/utils';
 
 interface Props {
   event: any;
 }
 
+
+
 export const EventInfo: React.FC<Props> = ({ event }) => {
+  const product = event.properties.Product;
   return (
     <>
       <h1 className='text-2xl font-bold text-gray-700'>
@@ -27,6 +33,26 @@ export const EventInfo: React.FC<Props> = ({ event }) => {
         <div className='mb-4 flex items-center justify-start text-lg text-gray-500'>
           {getFromRichText(event.properties.Description)}
         </div>
+        {containsProduct(product) && (
+          <>
+            <div className='my-4 h-[1px] bg-gray-300' />
+            <h2 className='text-sm font-bold text-gray-700'>
+              This event contains a payment
+            </h2>
+            <div className=''>
+              <div className='flex items-center justify-start text-lg text-gray-500'>
+                {getFromTitle(product.properties.Name)}
+              </div>
+              <div className='mb-1 flex items-center justify-start text-xs text-gray-500'>
+                {getFromRichText(product.properties.Description)}
+              </div>
+              <div className='flex items-center justify-start text-lg text-gray-500'>
+                {getFromNumberToPrice(product.properties.Price)}
+              </div>
+            </div>
+            <div className='my-4 h-[1px] bg-gray-300' />
+          </>
+        )}
       </div>
     </>
   );

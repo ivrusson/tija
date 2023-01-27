@@ -59,3 +59,14 @@ export const createBooking = async (data: any, options: any) => {
     },
   });
 };
+
+export const getPaymentLink = async (data: any, options: any) => {
+  return await request({
+    path: `/api/payments/payment-link`,
+    method: 'POST',
+    data,
+    headers: {
+      'CSRF-Token': options.csrfToken,
+    },
+  });
+};

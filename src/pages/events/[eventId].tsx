@@ -21,6 +21,11 @@ const Event: NextPageWithLayout<Props> = ({ csrfToken, event }) => {
     <div className='page page-event min-h-full'>
       <Seo templateTitle='Event page' />
       <EventForm event={event} csrfToken={csrfToken} />
+      {/* <div className='mt-2'>
+        <pre className='flex-wrap bg-gray-900 text-white'>
+          {JSON.stringify(event, null, 2)}
+        </pre>
+      </div> */}
     </div>
   );
 };

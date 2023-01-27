@@ -12,7 +12,7 @@ import { dateToUtc } from '@/lib/helper';
 
 import { EventInfo } from '@/components/events/EventInfo';
 import Share from '@/components/events/Share';
-import { getFromNumber } from '@/components/events/utils';
+import { containsProduct, getFromNumber } from '@/components/events/utils';
 
 dayjs.extend(dayLocaleData);
 interface Props {
@@ -36,7 +36,7 @@ const CustomerStep = ({ csrfToken, event, data, onSubmit, onStep }: Props) => {
 
   const onFinish = async (values: any) => {
     setSubmitting(true);
-
+    const product = event.properties.Product;
     const bookingData = {
       ...data,
       ...values,
@@ -47,12 +47,21 @@ const CustomerStep = ({ csrfToken, event, data, onSubmit, onStep }: Props) => {
           .clone()
           .add(getFromNumber(event.properties.Duration), 'm')
       ),
+      product: containsProduct(product)
+        ? {
+            id: product.id,
+            quantity: 1,
+          }
+        : null,
     };
 
     const booking = await createBooking(bookingData, { csrfToken });
 
     if (booking) {
-      onSubmit(values);
+      onSubmit({
+        ...values,
+        booking,
+      });
     }
 
     setSubmitting(false);

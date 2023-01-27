@@ -167,4 +167,18 @@ export class NotionProvider {
       );
     }
   }
+
+  public async updatePage(pageId: string, data: any) {
+    try {
+      const response = await this.client.pages.update({
+        page_id: pageId,
+        properties: data,
+      });
+      return response;
+    } catch (err) {
+      throw new ConflictException(
+        `Error updating object`
+      );
+    }
+  }
 }

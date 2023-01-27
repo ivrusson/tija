@@ -9,6 +9,10 @@ import { CalendarController } from '@/core/modules/calendar/calendar.controller'
 import { CalendarService } from '@/core/modules/calendar/calendar.service';
 import { EventController } from '@/core/modules/events/event.controller';
 import { EventService } from '@/core/modules/events/event.service';
+import { OrderController } from '@/core/modules/orders/order.controller';
+import { OrderService } from '@/core/modules/orders/order.service';
+import { PaymentController } from '@/core/modules/payments/payment.controller';
+import { PaymentService } from '@/core/modules/payments/payment.service';
 import { NextTijaRequest, NextTijaResponse } from '@/core/types';
 
 export interface IProvider {
@@ -70,6 +74,16 @@ const tijaModule = TijaModule.getInstance([
     name: 'bookings',
     controller: BookingController,
     service: Container.get(BookingService),
+  },
+  {
+    name: 'orders',
+    controller: OrderController,
+    service: Container.get(OrderService),
+  },
+  {
+    name: 'payments',
+    controller: PaymentController,
+    service: Container.get(PaymentService),
   },
 ]);
 

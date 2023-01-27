@@ -68,6 +68,17 @@ export function fieldToSelect(value: string): NotionRequestSelectType {
   };
 }
 
+export type NotionRequestNumberType = {
+  number: number;
+};
+
+export function fieldToNumber(value: number | string): NotionRequestNumberType {
+  return {
+    number: typeof value === 'string' ? parseFloat(value) : value,
+  };
+}
+
+
 export type NotionRequestStatusType = {
   status: {
     name: string;
@@ -141,6 +152,7 @@ export const toNotionFields = {
   parent: fieldToParent,
   title: fieldToTitle,
   rich_text: fieldToRichText,
+  number: fieldToNumber,
   select: fieldToSelect,
   status: fieldToStatus,
   email: fieldToEmail,

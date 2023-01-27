@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs from 'dayjs';
 import dayLocaleData from 'dayjs/plugin/localeData';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import CalendarStep from '@/components/events/form/CalendarStep';
+import CheckoutStep from '@/components/events/form/CheckoutStep';
 import CustomerStep from '@/components/events/form/CustomerStep';
 import ResumeStep from '@/components/events/form/ResumeStep';
+import { containsProduct } from '@/components/events/utils';
 
 dayjs.extend(dayLocaleData);
 
@@ -19,6 +21,11 @@ const EventForm = ({ csrfToken, event }: Props) => {
     eventId: event.id,
   });
   const [step, setStep] = useState<string>('calendar');
+
+  const hasProduct: boolean = useMemo(
+    () => containsProduct(event.properties.Product),
+    [event.properties.Product]
+  );
 
   return (
     <div className=''>
@@ -46,9 +53,16 @@ const EventForm = ({ csrfToken, event }: Props) => {
               ...data,
               ...values,
             });
-            setStep('resume');
+            if (hasProduct) {
+              setStep('checkout');
+            } else {
+              setStep('resume');
+            }
           }}
         />
+      )}
+      {step === 'checkout' && hasProduct && (
+        <CheckoutStep event={event} data={data} />
       )}
       {step === 'resume' && <ResumeStep event={event} data={data} />}
     </div>

@@ -15,6 +15,10 @@ export class BookingRepository {
     return this.notionProvider.queryDatabase('DB_BOOKINGS', filters, sort);
   }
 
+  async getBooking(bookingId: string): Promise<any> {
+    return this.notionProvider.getPage('DB_BOOKINGS', bookingId);
+  }
+
   async createCustomerFromBooking(data: any): Promise<any> {
     const customer = {
       parent: toNotionFields.parent(this.configService.get('DB_CUSTOMERS')),
@@ -59,6 +63,9 @@ export class BookingRepository {
           Status: toNotionFields.status('Pending'),
           Customer: toNotionFields.relations([{ id: customerId }]),
           Event: toNotionFields.relations([{ id: data.eventId }]),
+          ...(data.order ? {
+            Order: toNotionFields.relations([{ id: data.order.id }]),
+          } : {}),
         },
       };
       try {
