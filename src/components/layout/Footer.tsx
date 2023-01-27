@@ -20,7 +20,7 @@ const Footer: React.FC<Props> = () => {
             href='https://ivrusson.notion.site/Tija-38ca18ea7c16439fab623b3349171fd1'
             className='flex items-center justify-center gap-1 rounded-md bg-gray-900 py-1 px-2 text-sm text-white no-underline'
           >
-            <div>Ceated with</div>
+            <div>Created with</div>
             <div className='text-purple-600'>Tija</div>
           </Link>
         </div>
