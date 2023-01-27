@@ -32,11 +32,11 @@ div {
 /* Selection color */
 
 ::-moz-selection {
-  @apply bg-purple-300 text-purple-700;
+  @apply bg-gray-300 text-gray-700;
 }
 
 ::selection {
-  @apply bg-purple-300 text-purple-700;
+  @apply bg-gray-300 text-gray-700;
 }
 
 /* Layout */

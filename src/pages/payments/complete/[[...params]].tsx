@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GetServerSideProps } from 'next';
-import { ReactElement } from 'react';
 
 import Layout from '@/components/layout/Layout';
 import CompletedCard from '@/components/payments/CompleteCard';
@@ -16,25 +15,23 @@ interface Props {
 
 const PaymentCompleted: NextPageWithLayout<Props> = ({ checkout }) => {
   return (
-    <div className='page page-event'>
-      <Seo templateTitle='Payment Complete' />
-      <div className='py-8'>
-        <div className='mb-8 text-center'>
-          <h1 className='text-white'>Payment Complete</h1>
-        </div>
-        <CompletedCard {...checkout} />
-        {/* <div className='mt-2'>
+    <Layout>
+      <div className='page page-event'>
+        <Seo templateTitle='Payment Complete' />
+        <div className='py-8'>
+          <div className='mb-8 text-center'>
+            <h1 className='text-white'>Payment Complete</h1>
+          </div>
+          <CompletedCard {...checkout} />
+          {/* <div className='mt-2'>
           <pre className='flex-wrap bg-gray-900 text-white'>
             {JSON.stringify(checkout, null, 2)}
           </pre>
         </div> */}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
-};
-
-PaymentCompleted.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

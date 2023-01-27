@@ -1,6 +1,9 @@
-import { Head, Html, Main, NextScript } from 'next/document';
+import { DocumentProps, Head, Html, Main, NextScript } from 'next/document';
 
-export default function Document() {
+
+
+const Document = (props: DocumentProps) => {
+  const { theme } = props.__NEXT_DATA__.props;
   return (
     <Html lang='en'>
       <Head>
@@ -12,10 +15,12 @@ export default function Document() {
           crossOrigin='anonymous'
         />
       </Head>
-      <body className='bg-gradient-to-r from-fuchsia-400 via-violet-900 to-indigo-500'>
+      <body className={theme.bgColor}>
         <Main />
         <NextScript />
       </body>
     </Html>
   );
-}
+};
+
+export default Document;

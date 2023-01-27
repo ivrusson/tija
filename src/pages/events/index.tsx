@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GetServerSideProps } from 'next';
-import { ReactElement } from 'react';
 
 import EventList from '@/components/events/EventList';
 import Layout from '@/components/layout/Layout';
@@ -15,21 +14,19 @@ interface Props {
 
 const Events: NextPageWithLayout<Props> = ({ events }) => {
   return (
-    <div className='page page-event'>
-      <Seo templateTitle='Events page' />
-      <div className='py-8'>
-        <div className='mb-8 text-center'>
-          <h1 className='text-white'>Book an event</h1>
+    <Layout>
+      <div className='page page-event'>
+        <Seo templateTitle='Events page' />
+        <div className='py-8'>
+          <div className='mb-8 text-center'>
+            <h1 className='text-white'>Book an event</h1>
+          </div>
+          <EventList events={events} />
         </div>
-        <EventList events={events} />
+        {/* <pre className='bg-gray-800 text-white'>{JSON.stringify(events[0], null, 2)}</pre> */}
       </div>
-      {/* <pre className='bg-gray-800 text-white'>{JSON.stringify(events[0], null, 2)}</pre> */}
-    </div>
+    </Layout>
   );
-};
-
-Events.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {

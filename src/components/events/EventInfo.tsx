@@ -1,21 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { RiTimeLine } from 'react-icons/ri';
 
 import {
+  containsProduct,
   getFromNumber,
   getFromNumberToPrice,
   getFromRichText,
   getFromTitle,
-  containsProduct,
 } from '@/components/events/utils';
 
 interface Props {
   event: any;
 }
-
-
 
 export const EventInfo: React.FC<Props> = ({ event }) => {
   const product = event.properties.Product;

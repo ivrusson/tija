@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ReactElement } from 'react';
 
 import EventForm from '@/components/events/EventForm';
 import Layout from '@/components/layout/Layout';
@@ -18,20 +17,18 @@ interface Props {
 
 const Event: NextPageWithLayout<Props> = ({ csrfToken, event }) => {
   return (
-    <div className='page page-event min-h-full'>
-      <Seo templateTitle='Event page' />
-      <EventForm event={event} csrfToken={csrfToken} />
-      {/* <div className='mt-2'>
+    <Layout>
+      <div className='page page-event min-h-full'>
+        <Seo templateTitle='Event page' />
+        <EventForm event={event} csrfToken={csrfToken} />
+        {/* <div className='mt-2'>
         <pre className='flex-wrap bg-gray-900 text-white'>
           {JSON.stringify(event, null, 2)}
         </pre>
       </div> */}
-    </div>
+      </div>
+    </Layout>
   );
-};
-
-Event.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
 };
 
 export const getServerSideProps = withTijaSsr(async (context) => {

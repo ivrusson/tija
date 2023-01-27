@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GetServerSideProps } from 'next';
-import { ReactElement } from 'react';
 
 import Layout from '@/components/layout/Layout';
 import CancelledCard from '@/components/payments/CancelledCard';
@@ -16,20 +15,18 @@ interface Props {
 
 const PaymentCancelled: NextPageWithLayout<Props> = (props) => {
   return (
-    <div className='page page-event'>
-      <Seo templateTitle='Payment Cancelled' />
-      <div className='py-8'>
-        <div className='mb-8 text-center'>
-          <h1 className='text-white'>Payment Cancelled</h1>
-          <CancelledCard {...props} />
+    <Layout>
+      <div className='page page-event'>
+        <Seo templateTitle='Payment Cancelled' />
+        <div className='py-8'>
+          <div className='mb-8 text-center'>
+            <h1 className='text-white'>Payment Cancelled</h1>
+            <CancelledCard {...props} />
+          </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
-};
-
-PaymentCancelled.getLayout = (page: ReactElement) => {
-  return <Layout>{page}</Layout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

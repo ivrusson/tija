@@ -8,6 +8,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { RiArrowLeftLine, RiArrowRightLine } from 'react-icons/ri';
 
 import { useCalendar } from '@/hooks/useCalendar';
+import useTheme from '@/hooks/useTheme';
 
 import { EventInfo } from '@/components/events/EventInfo';
 import Share from '@/components/events/Share';
@@ -23,6 +24,7 @@ interface Props {
 const SAFE_DATE_FORMAT = 'YYYY-MM-DD';
 
 const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
+  const { color } = useTheme();
   const [show, setShow] = useState<boolean>(false);
   const { loading, times, currentDate, currentTime, updateDate, updateTime } =
     useCalendar({
@@ -94,13 +96,17 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
                           type='link'
                           onClick={() => handleMonthChange('remove')}
                         >
-                          <RiArrowLeftLine className='h-6 w-6 text-purple-500' />
+                          <RiArrowLeftLine
+                            className={`text-${color}-500 h-6 w-6`}
+                          />
                         </Button>
                         <Button
                           type='link'
                           onClick={() => handleMonthChange('add')}
                         >
-                          <RiArrowRightLine className='h-6 w-6 text-purple-500' />
+                          <RiArrowRightLine
+                            className={`text-${color}-500 h-6 w-6`}
+                          />
                         </Button>
                       </div>
                     </div>
@@ -124,7 +130,9 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
                     autoHideTimeout={1000}
                     autoHideDuration={200}
                     renderThumbVertical={() => (
-                      <div className='mr-2 h-12 w-2 rounded-full bg-purple-700 bg-opacity-50'></div>
+                      <div
+                        className={`mr-2 h-12 w-2 rounded-full bg-${color}-700 bg-opacity-50`}
+                      ></div>
                     )}
                   >
                     <div className='grid w-full grid-cols-1 gap-2 pr-4'>

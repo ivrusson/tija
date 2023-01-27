@@ -78,6 +78,14 @@ module.exports = async () => ({
   //     'res.cloudinary.com',
   //   ],
   // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
 
   // SVGR
   webpack(config) {
