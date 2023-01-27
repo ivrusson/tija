@@ -34,8 +34,18 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
     setShow(true);
   }, []);
 
-  const onDateChange = useCallback((value: Dayjs) => {
-    updateDate(value);
+  const onDateChange = useCallback(
+    (value: Dayjs) => {
+      updateDate(value);
+    },
+    [updateDate]
+  );
+
+  const disableDate = useCallback((currentDate: Dayjs) => {
+    if (currentDate.valueOf() > dayjs().subtract(1, 'd').valueOf()) {
+      return false;
+    }
+    return true;
   }, []);
 
   return (
@@ -98,14 +108,7 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
                 }}
                 fullscreen={false}
                 onChange={onDateChange}
-                disabledDate={(currentDate: Dayjs) => {
-                  if (
-                    currentDate.valueOf() > dayjs().subtract(1, 'd').valueOf()
-                  ) {
-                    return false;
-                  }
-                  return true;
-                }}
+                disabledDate={disableDate}
               />
               <div className='absolute right-0 top-0 h-full w-[1px] bg-gray-200' />
             </div>
