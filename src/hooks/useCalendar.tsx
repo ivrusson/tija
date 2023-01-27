@@ -107,7 +107,13 @@ const timesFromDate = (date: Dayjs, dates: SchedulerItem[] = []) => {
   return times;
 };
 
-export const useCalendar = (csrfToken: string) => {
+export const useCalendar = ({
+  eventId,
+  csrfToken,
+}: {
+  eventId: string;
+  csrfToken: string;
+}) => {
   const [state, dispatch] = useReducer(calendarReducer, initialState);
 
   useEffect(() => {
@@ -117,6 +123,7 @@ export const useCalendar = (csrfToken: string) => {
     });
     getCalendar(
       {
+        eventId,
         startDate: state.startDate,
         endDate: state.endDate,
       },
@@ -160,6 +167,7 @@ export const useCalendar = (csrfToken: string) => {
       });
       const { dates } = await getCalendar(
         {
+          eventId,
           startDate: date.format(DATE_FORMAT),
           endDate: date.endOf('month').format(DATE_FORMAT),
         },

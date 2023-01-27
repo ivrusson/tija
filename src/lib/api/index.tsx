@@ -31,16 +31,18 @@ export const request = async ({
 
 export const getCalendar = async (
   {
+    eventId,
     startDate,
     endDate,
   }: {
+    eventId: string;
     startDate: string;
     endDate: string;
   },
   options: any
 ) => {
   return await request({
-    path: `/api/calendar/${startDate}/${endDate}`,
+    path: `/api/calendar/${eventId}/${startDate}/${endDate}`,
     headers: {
       'CSRF-Token': options.csrfToken,
     },

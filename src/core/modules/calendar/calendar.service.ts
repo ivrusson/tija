@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 
 import { BookingRepository } from '@/core/modules/bookings/booking.repository';
 import { WorkingPlanRepository } from '@/core/modules/working-plans/working-plan.repository';
+import pageMapper from '@/core/providers/notion/helpers/pageMapper';
 import {
   SchedulerService,
   SchedulerWorkingPlan,
@@ -64,13 +65,17 @@ export class CalendarService {
     startDate: string;
     endDate: string;
   }): Promise<any> {
-    const workingplans = mock;
+    const bookings = await this.getCalendarBookings({
+      startDate,
+      endDate,
+    });
+    const workingPlans = await this.getCalendarWorkingPlans(eventId);
     const schedulerService = new SchedulerService(
       this.configService,
       startDate,
       endDate,
-      [],
-      workingplans
+      bookings,
+      workingPlans
     );
     const scheduler = schedulerService.getScheduler();
     return scheduler;
@@ -83,27 +88,27 @@ export class CalendarService {
     startDate: string;
     endDate: string;
   }) {
-    const filters = {
+    const filter = {
       and: [
         {
-          date: 'Date',
-          number: {
-            greater_than: startDate,
+          property: 'Date',
+          date: {
+            after: startDate,
           },
         },
         {
           property: 'Date',
           date: {
-            lower_than: endDate,
+            before: endDate,
           },
         },
       ],
     };
 
     try {
-      const response = await this.bookingRepository.getBookings(filters);
+      const response = await this.bookingRepository.getBookings(filter);
       if (response.results && Array.isArray(response.results)) {
-        return response.results;
+        return response.results.map((result: any) => pageMapper(result));
       }
     } catch (err) {
       return [];
@@ -111,19 +116,17 @@ export class CalendarService {
   }
 
   async getCalendarWorkingPlans(eventId: string) {
-    const filters = {
-      filter: {
-        property: 'Events',
-        relations: [
-          { id: eventId }
-        ]
+    const filter = {
+      property: "Events",
+      relation: {
+        contains: eventId
       }
     };
 
     try {
-      const response = await this.workingPlanRepository.getWorkingPlans(filters);
+      const response = await this.workingPlanRepository.getWorkingPlans(filter);
       if (response.results && Array.isArray(response.results)) {
-        return response.results;
+        return response.results.map((result: any) => pageMapper(result));
       }
     } catch (err) {
       return [];

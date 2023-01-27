@@ -10,7 +10,7 @@ export class WorkingPlanRepository {
 
   async getWorkingPlans(filters: any, sort?: any): Promise<any> {
     return this.notionProvider.queryDatabase(
-      this.tijaConfig.DB_WORKING_PLANS,
+      'DB_WORKING_PLANS',
       filters,
       sort
     );

@@ -49,7 +49,11 @@ export interface SchedulerWorkingPlan {
 
 export interface SchedulerBooking {
   Status: BookingStatusEnum;
-  Date: NotionFieldDate;
+  Date: {
+    start: string;
+    end: string;
+    time_zone: string | null;
+  };
 }
 
 export type SchedulerItem = {
@@ -112,6 +116,31 @@ export class SchedulerService {
     });
 
     return this.buildSchedulerOutput(dates);
+  }
+
+  public removeBookingFromDates(dates: SchedulerItem[]): SchedulerItem[] {
+    const cleaned_dates = dates;
+    this.bookings.forEach((booking: SchedulerBooking) => {
+      if (booking.Date.start && booking.Date.end) {
+        for (let i = 0; i < cleaned_dates.length; i++) {
+          const dayString = this.getDateString(cleaned_dates[i].date);
+          if (this.getDateString(booking.Date.start) === dayString) {
+            const bookStartTimestamp = new Date(`${dayString} ${this.getHourString(booking.Date.start)}`).getTime();
+            const bookEndTimestamp = new Date(`${dayString} ${this.getHourString(booking.Date.end)}`).getTime();
+
+            const cleanedTimes = cleaned_dates[i].times.filter((time: string) => {
+              const timestamp = new Date(`${dayString} ${time}`).getTime();
+              if (bookStartTimestamp < timestamp && bookEndTimestamp > timestamp) {
+                return true;
+              }
+              return false;
+            });
+            cleaned_dates[i].times = cleanedTimes;
+          }
+        }
+      }
+    });
+    return cleaned_dates;
   }
 
   public async getOpenSchedulerItems(): Promise<SchedulerItem[]> {

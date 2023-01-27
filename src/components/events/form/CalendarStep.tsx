@@ -25,7 +25,10 @@ const SAFE_DATE_FORMAT = 'YYYY-MM-DD';
 const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
   const [show, setShow] = useState<boolean>(false);
   const { loading, times, currentDate, currentTime, updateDate, updateTime } =
-    useCalendar(csrfToken);
+    useCalendar({
+      eventId: event.id,
+      csrfToken,
+    });
 
   useEffect(() => {
     setShow(true);
