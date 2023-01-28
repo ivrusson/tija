@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import useTheme from '@/hooks/useTheme';
 
-import Logo from '~/tija-logo.svg';
+import Logo from '~/svg/tija-logo.svg';
 
 interface Props {
   children?: React.ReactNode;

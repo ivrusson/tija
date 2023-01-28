@@ -3,12 +3,13 @@ import { useRouter } from 'next/router';
 
 const defaultMeta = {
   title: 'Tija',
-  siteName: 'Tija',
-  description: 'Booking system build with notion',
-  url: 'https://www.notion.so/ivrusson/Tija-38ca18ea7c16439fab623b3349171fd1',
+  siteName: 'Tija booking system',
+  description: 'Tija Booking system build with notion',
+  url: '', // TODO: use nextjs deployed url
   type: 'website',
   robots: 'follow, index',
-  image: '',
+  image:
+    'https://res.cloudinary.com/dtp86vqny/image/upload/v1674905355/tija/tija-booking-system.png',
 };
 
 type SeoProps = {
