@@ -118,23 +118,23 @@ export type DateTypes = string | Date | Dayjs;
 export type DateObject = {
   start: string;
   end?: string;
-  time_zone: string;
+  time_zone?: string;
 }
 
 export function getDateObjectFromUserTimeZone(start: DateTypes, end?: DateTypes) {
   const time_zone = dayjs.tz.guess();
 
   const dateToTimeZoneIsoString = (date: DateTypes) => {
-    const cloned = dayjs(date).clone().utc();
-    return cloned.tz(time_zone).toISOString()
+    const cloned = dayjs(date).clone();
+    return cloned.tz(time_zone).format()
   };
 
   const dateObj: DateObject = {
     start: dateToTimeZoneIsoString(start),
     ...(end ? {
-      nd: dateToTimeZoneIsoString(end)
+      end: dateToTimeZoneIsoString(end)
     } : {}),
-    time_zone,
+    // time_zone,
   };
   return dateObj;
 }

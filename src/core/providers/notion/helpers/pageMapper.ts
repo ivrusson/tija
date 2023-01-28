@@ -17,7 +17,7 @@ export default function pageMapper(page: any) {
           break;
         case 'status':
           {
-            properties[key] = prop.select.status;
+            properties[key] = prop.status.name;
           }
           break;
         case 'date':
@@ -39,8 +39,17 @@ export default function pageMapper(page: any) {
               .join(' ');
           }
           break;
+        case 'relation':
+          {
+            properties[key] = prop.relation;
+          }
+          break;
         default: {
-          properties[key] = prop[prop.type];
+          if (prop[prop.type]) {
+            properties[key] = prop[prop.type];
+          } else {
+            properties[key] = prop;
+          }
         }
       }
     });

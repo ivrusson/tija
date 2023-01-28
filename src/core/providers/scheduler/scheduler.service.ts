@@ -1,6 +1,12 @@
+import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 import { Service } from 'typedi';
 
 import { ConfigService } from '@/core/config/config.service';
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 export type EmptyValue = null | undefined;
 
@@ -58,7 +64,7 @@ export interface SchedulerBooking {
 
 export type SchedulerItem = {
   date: string;
-  times: string[];
+  times: number[];
 };
 
 export type Scheduler = {
@@ -99,7 +105,7 @@ export class SchedulerService {
     const overrideDates = await this.getOverrideSchedulerItems();
     const closedDates = await this.getClosedDates();
 
-    const dates = openDates.map((item) => {
+    let dates = openDates.map((item) => {
       if (closedDates.includes(item.date)) {
         return {
           ...item,
@@ -115,27 +121,36 @@ export class SchedulerService {
       return item;
     });
 
+    dates = this.removeBookingFromDates(dates)
+
     return this.buildSchedulerOutput(dates);
   }
 
   public removeBookingFromDates(dates: SchedulerItem[]): SchedulerItem[] {
     const cleaned_dates = dates;
+
     this.bookings.forEach((booking: SchedulerBooking) => {
       if (booking.Date.start && booking.Date.end) {
         for (let i = 0; i < cleaned_dates.length; i++) {
           const dayString = this.getDateString(cleaned_dates[i].date);
-          if (this.getDateString(booking.Date.start) === dayString) {
-            const bookStartTimestamp = new Date(`${dayString} ${this.getHourString(booking.Date.start)}`).getTime();
-            const bookEndTimestamp = new Date(`${dayString} ${this.getHourString(booking.Date.end)}`).getTime();
 
-            const cleanedTimes = cleaned_dates[i].times.filter((time: string) => {
-              const timestamp = new Date(`${dayString} ${time}`).getTime();
-              if (bookStartTimestamp < timestamp && bookEndTimestamp > timestamp) {
-                return true;
+          if (this.getDateString(booking.Date.start) === dayString) {
+
+            const bookStartTimestamp = dayjs(booking.Date.start).utc().valueOf();
+            const bookEndTimestamp = dayjs(booking.Date.end).utc().valueOf();
+
+            const times = cleaned_dates[i].times;
+            const validTimes: number[] = [];
+
+            for (let j = 0; j < times.length; j++) {
+              const time = times[j];
+
+              if (time < bookStartTimestamp || time > bookEndTimestamp) {
+                validTimes.push(time);
               }
-              return false;
-            });
-            cleaned_dates[i].times = cleanedTimes;
+            }
+
+            cleaned_dates[i].times = validTimes;
           }
         }
       }
@@ -148,7 +163,7 @@ export class SchedulerService {
       (plan) => plan.Type === workingPlanType.OPEN
     );
 
-    const items = this.getSchedulerItems(openPlans);
+    const items = await this.getSchedulerItems(openPlans);
 
     return items;
   }
@@ -158,7 +173,7 @@ export class SchedulerService {
       (plan) => plan.Type === workingPlanType.OVERRIDE
     );
 
-    const items = this.getSchedulerItems(overridePlans, true);
+    const items = await this.getSchedulerItems(overridePlans, true);
 
     return items;
   }
@@ -178,11 +193,12 @@ export class SchedulerService {
         return [];
       }
 
-      const times = this.geWorkingHours(plan?.Dates, plan?.Break);
-
       // Insert valid times to each day
       for (let i = 0; i < datesArray.length; i++) {
         const day = datesArray[i];
+
+        const times = this.geWorkingHours(day, plan?.Dates, plan?.Break);
+
         if (isOverride) {
           const startDate = this.getDateString(plan?.Dates?.start);
           if (startDate === day) {
@@ -232,20 +248,21 @@ export class SchedulerService {
   }
 
   public geWorkingHours(
+    day: string,
     dates: NotionFieldDate | EmptyValue,
     breaks: NotionFieldDate | EmptyValue
   ) {
-    let times: string[] = [];
-    let disabledDates: string[] = [];
+    let times: number[] = [];
+    let disabledDates: number[] = [];
 
     // Build array of Dates times
     if (dates) {
-      times = this.buildHours(dates.start, dates.end);
+      times = this.buildHours(day, dates.start, dates.end);
     }
 
     // Build array of disabled times
     if (breaks) {
-      disabledDates = this.buildHours(breaks.start, breaks.end);
+      disabledDates = this.buildHours(day, breaks.start, breaks.end);
     }
     // Remove disabled times from avaiable times
     times = times.filter((hour) => !disabledDates.includes(hour));
@@ -254,29 +271,30 @@ export class SchedulerService {
   }
 
   public buildHours(
+    day: string,
     startTime: string | EmptyValue,
     endTime: string | EmptyValue
-  ): string[] {
+  ): number[] {
     // Must contain a valid date times
     if (!startTime || !endTime) {
       return [];
     }
 
     // Define start and end time to build the times slot array
-    const dateStr = this.getDateString();
 
     const times = [];
 
     let currentTime = this.dateHasTime(startTime)
-      ? new Date(`${dateStr} ${this.getHourString(startTime)}`).getTime()
-      : new Date(`${dateStr} ${DEFAULT_START_HOUR}`).getTime();
+      ? dayjs(`${day} ${this.getHourString(startTime)}`).utc().valueOf()
+      : dayjs(`${day} ${DEFAULT_START_HOUR}`).utc().valueOf();
+
     const stopTime = this.dateHasTime(endTime)
-      ? new Date(`${dateStr} ${this.getHourString(endTime)}`).getTime()
-      : new Date(`${dateStr} ${DEFAULT_END_HOUR}`).getTime();
+      ? dayjs(`${day} ${this.getHourString(endTime)}`).utc().valueOf()
+      : dayjs(`${day} ${DEFAULT_END_HOUR}`).utc().valueOf();
 
     while (currentTime < stopTime) {
       // Insert the time
-      times.push(this.getHourString(new Date(currentTime)));
+      times.push(currentTime);
       // Increase date mins to milliseconds
       currentTime += this.slotSize * 60000;
     }

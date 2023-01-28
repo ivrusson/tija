@@ -89,8 +89,15 @@ describe('scheduler service test', () => {
   );
 
   it('should return and array of times', () => {
+    const DATE_STR = '2023-01-15';
     const START_DATE_STR = '2023-01-10 10:00';
     const END_DATE_STR = '2023-01-15 12:00';
+
+    const getTimeStamp = (hour: string) => {
+      const splitDate = DATE_STR.split('-').map(n => parseInt(n));
+      const hourDate = hour.split(':').map(n => parseInt(n));
+      new Date(Date.UTC(splitDate[0], splitDate[1], splitDate[2], hourDate[0], hourDate[1])).getTime()
+    }
 
     const EXPECTED_ARRAY = [
       '10:00',
@@ -101,9 +108,9 @@ describe('scheduler service test', () => {
       '11:15',
       '11:30',
       '11:45',
-    ];
+    ].map(n => getTimeStamp(n));
 
-    const times = schedulerService.buildHours(START_DATE_STR, END_DATE_STR);
+    const times = schedulerService.buildHours(DATE_STR, START_DATE_STR, END_DATE_STR);
 
     expect(times).toEqual(EXPECTED_ARRAY);
   });

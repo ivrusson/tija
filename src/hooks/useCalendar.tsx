@@ -26,7 +26,7 @@ export interface CalendarState {
   currentDate: Dayjs;
   currentTime: Dayjs | null;
   dates: SchedulerItem[];
-  times: string[];
+  times: number[];
 }
 
 interface CalendarUpdatePayload {
@@ -34,7 +34,7 @@ interface CalendarUpdatePayload {
 }
 
 interface TimesUpdatePayload {
-  times: string[];
+  times: number[];
 }
 
 interface CalendarDatePayload {
@@ -111,7 +111,7 @@ const initialState: CalendarState = {
 };
 
 const timesFromDate = (date: Dayjs, dates: SchedulerItem[] = []) => {
-  let times: string[] = [];
+  let times: number[] = [];
   if (dates) {
     const day = dates.find((d: any) => d.date === date.format(DATE_FORMAT));
     if (day) {
@@ -175,7 +175,7 @@ export const useCalendar = ({
 
     if (date.valueOf() > dayjs().valueOf()) {
       const datesArray = dates.map(({ date }) => date);
-      if (!datesArray.includes(date.format(DATE_FORMAT))) {
+      if (!state.loading && !datesArray.includes(date.format(DATE_FORMAT))) {
         dispatch({
           type: CalendarActionEnum.LOADING,
           payload: true,

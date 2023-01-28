@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 
 import { createBooking } from '@/lib/api';
 import { getDialCodes } from '@/lib/countries';
-import { dateToUtc } from '@/lib/helper';
+import { getDateObjectFromUserTimeZone } from '@/lib/helper';
 
 import { EventInfo } from '@/components/events/EventInfo';
 import Share from '@/components/events/Share';
@@ -37,16 +37,15 @@ const CustomerStep = ({ csrfToken, event, data, onSubmit, onStep }: Props) => {
   const onFinish = async (values: any) => {
     setSubmitting(true);
     const product = event.properties.Product;
+    const startDate = data.currentTime;
+    const endDate = startDate
+      .clone()
+      .add(getFromNumber(event.properties.Duration), 'm');
     const bookingData = {
       ...data,
       ...values,
       eventId: data.eventId,
-      startDate: dateToUtc(data.currentTime),
-      endDate: dateToUtc(
-        data.currentTime
-          .clone()
-          .add(getFromNumber(event.properties.Duration), 'm')
-      ),
+      date: getDateObjectFromUserTimeZone(startDate, endDate),
       product: containsProduct(product)
         ? {
             id: product.id,

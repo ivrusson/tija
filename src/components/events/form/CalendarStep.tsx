@@ -22,6 +22,7 @@ interface Props {
 }
 
 const SAFE_DATE_FORMAT = 'YYYY-MM-DD';
+const SAFE_TIME_FORMAT = 'HH:mm';
 
 const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
   const { color } = useTheme();
@@ -136,28 +137,31 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
                     )}
                   >
                     <div className='grid w-full grid-cols-1 gap-2 pr-4'>
-                      {times.map((time) => (
-                        <Button
-                          key={time}
-                          type={
-                            currentTime?.format(`${SAFE_DATE_FORMAT} HH:mm`) ===
-                            `${currentDate.format(SAFE_DATE_FORMAT)} ${time}`
-                              ? 'primary'
-                              : 'default'
-                          }
-                          onClick={() =>
-                            updateTime(
-                              dayjs(
-                                `${currentDate.format(
-                                  SAFE_DATE_FORMAT
-                                )} ${time}`
-                              )
-                            )
-                          }
-                        >
-                          <span className='text-md'>{time}</span>
-                        </Button>
-                      ))}
+                      {times.map((time) => {
+                        const dayStr = currentDate.format(SAFE_DATE_FORMAT);
+                        const timeStr = dayjs(time).format(SAFE_TIME_FORMAT);
+                        const dateFromTime = dayjs(`${dayStr} ${timeStr}`);
+                        const currentTimeDateStr = currentTime?.format(
+                          `${SAFE_DATE_FORMAT} ${SAFE_TIME_FORMAT}`
+                        );
+                        const currentDateStr = `${dayStr} ${timeStr}`;
+                        
+                        return (
+                          <Button
+                            key={time}
+                            type={
+                              currentTimeDateStr === currentDateStr
+                                ? 'primary'
+                                : 'default'
+                            }
+                            onClick={() => updateTime(dateFromTime)}
+                          >
+                            <span className='text-md'>
+                              {dateFromTime.format(SAFE_TIME_FORMAT)}
+                            </span>
+                          </Button>
+                        );
+                      })}
                     </div>
                   </Scrollbars>
                 )}

@@ -38,7 +38,7 @@ export class CalendarService {
       bookings,
       workingPlans
     );
-    const scheduler = schedulerService.getScheduler();
+    const scheduler = await schedulerService.getScheduler();
     return scheduler;
   }
 
@@ -54,13 +54,13 @@ export class CalendarService {
         {
           property: 'Date',
           date: {
-            after: startDate,
+            after: new Date(startDate),
           },
         },
         {
           property: 'Date',
           date: {
-            before: endDate,
+            before: new Date(endDate),
           },
         },
       ],
@@ -69,7 +69,8 @@ export class CalendarService {
     try {
       const response = await this.bookingRepository.getBookings(filter);
       if (response.results && Array.isArray(response.results)) {
-        return response.results.map((result: any) => pageMapper(result));
+        const formattedResults = response.results.map((result: any) => pageMapper(result));
+        return formattedResults;
       }
     } catch (err) {
       return [];
@@ -87,7 +88,10 @@ export class CalendarService {
     try {
       const response = await this.workingPlanRepository.getWorkingPlans(filter);
       if (response.results && Array.isArray(response.results)) {
-        return response.results.map((result: any) => pageMapper(result));
+        const formattedResults = response.results.map((result: any) => pageMapper(result));
+        // console.log('---------- FORMATTED WORKING PLANS RESULTS ----------');
+        // console.log(JSON.stringify(formattedResults, null, 2));
+        return formattedResults;
       }
     } catch (err) {
       return [];
