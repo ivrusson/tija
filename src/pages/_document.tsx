@@ -1,7 +1,5 @@
 import { DocumentProps, Head, Html, Main, NextScript } from 'next/document';
 
-
-
 const Document = (props: DocumentProps) => {
   const { theme } = props.__NEXT_DATA__.props;
   return (
@@ -15,7 +13,7 @@ const Document = (props: DocumentProps) => {
           crossOrigin='anonymous'
         />
       </Head>
-      <body className={theme.bgColor}>
+      <body className={`flex min-h-screen flex-col ${theme.bgColor}`}>
         <Main />
         <NextScript />
       </body>

@@ -2,6 +2,9 @@
 import dayjs, { Dayjs } from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import colors from 'tailwindcss/colors';
+
+import { DEFAULT_BASE_COLOR, DEFAULT_BG_COLOR, DEFAULT_FONT_TEXT } from '@/constant/env';
 
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -12,9 +15,7 @@ type OpenGraphType = {
   templateTitle?: string;
   logo?: string;
 };
-// !STARTERCONF This OG is generated from https://github.com/theodorusclarence/og
-// Please clone them and self-host if your site is going to be visited by many people.
-// Then change the url and the default logo.
+
 export function openGraph({
   siteName,
   templateTitle,
@@ -137,4 +138,65 @@ export function getDateObjectFromUserTimeZone(start: DateTypes, end?: DateTypes)
     // time_zone,
   };
   return dateObj;
+}
+
+type ThemeFields = {
+  color: string;
+  bgColor: string;
+  title?: string;
+  description?: string;
+  logo?: string | null;
+  antdTheme?: {
+    token: { [key: string]: string | number };
+  }
+};
+
+const colorRegex = /(?:$|^|)(red-|blue-|indigo-|cool-gray-|pink-|yellow-|teal-|gray-|orange-|green-|purple-)(50|100|200|300|400|500|600|700|800|900)(?:$|^|)/gi;
+const urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+
+export const themeBuilder = (theme: ThemeFields): ThemeFields => {
+  const out = theme;
+
+  // Check the main theme color
+  if (
+    out.color.replace(/\s/g, "") === ''
+    || out.color.search('-') > -1
+    || !Object.keys(colors).includes(out.color.trim())
+  ) {
+    out.color = DEFAULT_BASE_COLOR;
+  } else {
+    out.color = out.color.trim();
+  }
+
+  if (
+    out.bgColor.replace(/\s/g, "") === ''
+    || out.bgColor.search(colorRegex) === -1
+  ) {
+    out.bgColor = DEFAULT_BG_COLOR;
+  } else {
+    out.bgColor = out.bgColor.trim();
+  }
+
+  if (
+    typeof out.logo !== 'string'
+    || out.logo?.search(urlRegex) === -1
+  ) {
+    out.logo = null;
+  } else {
+    out.logo = out.logo.trim();
+  }
+
+  const colorList = colors as any;
+  out.antdTheme = {
+    token: {
+      colorPrimary: colorList[out.color][600],
+      colorLink: colorList[out.color][600],
+      colorLinkActive: colorList[out.color][400],
+      colorLinkHover: colorList[out.color][500],
+      fontFamily: DEFAULT_FONT_TEXT,
+      fontSize: 16,
+    },
+  };
+
+  return out;
 }

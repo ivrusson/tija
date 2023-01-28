@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
+import useTheme from '@/hooks/useTheme';
+
 const defaultMeta = {
   title: 'Tija',
   siteName: 'Tija booking system',
@@ -18,9 +20,14 @@ type SeoProps = {
 } & Partial<typeof defaultMeta>;
 
 export default function Seo(props: SeoProps) {
+  const theme = useTheme();
   const router = useRouter();
   const meta = {
     ...defaultMeta,
+    ...{
+      siteName: theme.title,
+      description: theme.description,
+    },
     ...props,
   };
   meta['title'] = props.templateTitle

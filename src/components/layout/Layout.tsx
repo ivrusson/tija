@@ -3,10 +3,12 @@ import Header from './Header';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div className='h-full min-h-screen w-full'>
-      <Header />
-      <main className='container pb-32'>{children}</main>
-      <Footer />
+    <div className='flex min-h-screen items-center justify-center'>
+      <div>
+        <Header />
+        <main className='container min-h-[400px]'>{children}</main>
+        <Footer />
+      </div>
     </div>
   );
 }
