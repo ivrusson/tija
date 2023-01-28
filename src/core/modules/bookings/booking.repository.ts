@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import dayjs from 'dayjs';
 import { Service } from 'typedi';
 import { uuid } from 'uuidv4';
 
@@ -52,13 +51,7 @@ export class BookingRepository {
         properties: {
           'Booking ID': toNotionFields.title(uuid()),
           Date: {
-            date: {
-              start: dayjs(data.startDate).format(
-                'YYYY-MM-DDTHH:mm:00.000+00:00'
-              ),
-              end: dayjs(data.endDate).format('YYYY-MM-DDTHH:mm:00.000+00:00'),
-              time_zone: data.timeZone,
-            },
+            date: data.date,
           },
           Status: toNotionFields.status('Pending'),
           Customer: toNotionFields.relations([{ id: customerId }]),

@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import dayjs, { Dayjs } from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
-dayjs.extend(utc);
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 type OpenGraphType = {
   siteName: string;
@@ -26,9 +29,8 @@ export function openGraph({
     : undefined;
   const ogDesc = encodeURIComponent(description.trim());
 
-  return `https://og.<your-domain>/api/general?siteName=${ogSiteName}&description=${ogDesc}&logo=${ogLogo}${
-    ogTemplateTitle ? `&templateTitle=${ogTemplateTitle}` : ''
-  }`;
+  return `https://og.<your-domain>/api/general?siteName=${ogSiteName}&description=${ogDesc}&logo=${ogLogo}${ogTemplateTitle ? `&templateTitle=${ogTemplateTitle}` : ''
+    }`;
 }
 
 export function getFromLocalStorage(key: string): string | null {
@@ -76,11 +78,11 @@ export function calendarLinkGanerator(type: 'google' | 'outlook', data: any) {
         url = url.replace(
           '[DATES]',
           date.format(format.dateFormat) +
-            '/' +
-            date
-              .clone()
-              .add(data.event.duration || 0, 'm')
-              .format(format.dateFormat)
+          '/' +
+          date
+            .clone()
+            .add(data.event.duration || 0, 'm')
+            .format(format.dateFormat)
         );
       }
       break;
@@ -93,12 +95,12 @@ export function calendarLinkGanerator(type: 'google' | 'outlook', data: any) {
         url = url.replace(
           '[DATES]',
           '&startdt=' +
-            date.format(format.dateFormat) +
-            '&enddt=' +
-            date
-              .clone()
-              .add(data.event.duration || 0, 'm')
-              .format(format.dateFormat)
+          date.format(format.dateFormat) +
+          '&enddt=' +
+          date
+            .clone()
+            .add(data.event.duration || 0, 'm')
+            .format(format.dateFormat)
         );
       }
       break;
@@ -109,4 +111,30 @@ export function calendarLinkGanerator(type: 'google' | 'outlook', data: any) {
 
 export function dateToUtc(date: string | Date | Dayjs): string {
   return dayjs(date).clone().utc().format();
+}
+
+export type DateTypes = string | Date | Dayjs;
+
+export type DateObject = {
+  start: string;
+  end?: string;
+  time_zone: string;
+}
+
+export function getDateObjectFromUserTimeZone(start: DateTypes, end?: DateTypes) {
+  const time_zone = dayjs.tz.guess();
+
+  const dateToTimeZoneIsoString = (date: DateTypes) => {
+    const cloned = dayjs(date).clone().utc();
+    return cloned.tz(time_zone).toISOString()
+  };
+
+  const dateObj: DateObject = {
+    start: dateToTimeZoneIsoString(start),
+    ...(end ? {
+      nd: dateToTimeZoneIsoString(end)
+    } : {}),
+    time_zone,
+  };
+  return dateObj;
 }
