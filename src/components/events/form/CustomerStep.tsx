@@ -103,7 +103,7 @@ const CustomerStep = ({ csrfToken, event, data, onSubmit, onStep }: Props) => {
       leaveTo='transform scale-95 opacity-0'
     >
       <div className='mx-auto'>
-        <div className='bodergray-200 rounded-lg border bg-white p-4 shadow-lg'>
+        <div className='boder-gray-200 rounded-lg border bg-white p-4 shadow-lg'>
           <div className='grid grid-cols-12 gap-2'>
             <div className='relative col-span-12 md:col-span-4'>
               <EventInfo event={event} />
@@ -235,9 +235,9 @@ const CustomerStep = ({ csrfToken, event, data, onSubmit, onStep }: Props) => {
             </div>
             <div className='col-span-12 md:col-span-3'></div>
             <div className='col-span-12 pt-2'>
-              <div className='flex flex-col-reverse md:flex-row items-center justify-center md:justify-between'>
+              <div className='flex flex-col-reverse items-center justify-center md:flex-row md:justify-between'>
                 <Share event={event} />
-                <div className='flex flex-col-reverse md:flex-row items-center justify-center md:justify-end'>
+                <div className='flex flex-col-reverse items-center justify-center md:flex-row md:justify-end'>
                   <Button
                     type='link'
                     size='large'

@@ -53,13 +53,13 @@ const CheckoutStep = ({ event, data }: Props) => {
       leaveTo='transform scale-95 opacity-0'
     >
       <div className='mx-auto'>
-        <div className='bodergray-200 rounded-lg border bg-white p-4 shadow-lg'>
+        <div className='boder-gray-200 rounded-lg border bg-white p-4 shadow-lg'>
           <div className='grid grid-cols-12 gap-2'>
             <div className='relative col-span-12 md:col-span-4'>
               <EventInfo event={event} />
-              <div className='absolute right-0 top-0 h-full w-[1px] bg-gray-200  hidden md:visible' />
+              <div className='absolute right-0 top-0 hidden h-full w-[1px]  bg-gray-200 md:visible' />
             </div>
-            <div className='relative col-span-12 md:col-span-6 p-4'>
+            <div className='relative col-span-12 p-4 md:col-span-6'>
               <h3 className='text-2xl font-bold text-gray-700'>Checkout</h3>
               <div className='mb-2'>
                 <div className='text font-bold text-gray-700'>Booked day:</div>

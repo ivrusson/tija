@@ -10,7 +10,7 @@ interface Props {
 const CompletedCard: React.FC<Props> = ({ invoice }) => {
   return (
     <div className='completed-payment-card'>
-      <div className='bodergray-200 rounded-lg border bg-white p-4 shadow-lg'>
+      <div className='boder-gray-200 rounded-lg border bg-white p-4 shadow-lg'>
         <div className='grid grid-cols-12 gap-2'>
           <div className='col-span-12'>
             <div className='flex min-h-[320px] place-items-center'>

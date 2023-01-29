@@ -14,7 +14,7 @@ const EventItem: React.FC<Props> = ({ event }) => {
   const router = useRouter();
   return (
     <div key={event.id} className='event-item'>
-      <div className='bodergray-200 rounded-lg border bg-white p-4 shadow-lg'>
+      <div className='boder-gray-200 rounded-lg border bg-white p-4 shadow-lg'>
         <div className='grid grid-cols-12 gap-2'>
           <div className='col-span-12'>
             <EventInfo event={event} />
