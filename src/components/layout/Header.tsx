@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import Link from 'next/link';
 
 import useTheme from '@/hooks/useTheme';
 
@@ -9,9 +9,9 @@ export default function Header() {
   const theme = useTheme();
 
   return (
-    <header className='mt-auto w-full'>
-      <div className='layout flex items-center justify-center'>
-        <div className='mb-2'>
+    <header className='my-2 w-full'>
+      <div className='flex items-center justify-center'>
+        <div className='my-2'>
           <Link href='/'>
             {theme?.logo && theme.logo.includes('https://') ? (
               <Image

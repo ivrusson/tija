@@ -7,7 +7,7 @@ interface Props {
 
 const EventList = ({ events }: Props) => {
   return (
-    <div className='grid grid-cols-2 gap-4'>
+    <div className='grid grid-cols-1 md:grid-cols-2 gap-4 p-4 md:p-0'>
       {events.map((event: any) => (
         <EventItem key={event.id} event={event} />
       ))}

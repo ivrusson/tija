@@ -28,7 +28,7 @@ const EventForm = ({ csrfToken, event }: Props) => {
   );
 
   return (
-    <div className=''>
+    <div className='event-form p-4 md:p-0'>
       {step === 'calendar' && (
         <CalendarStep
           csrfToken={csrfToken}

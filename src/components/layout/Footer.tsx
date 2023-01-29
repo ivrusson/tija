@@ -10,12 +10,12 @@ interface Props {
 
 const Footer: React.FC<Props> = () => {
   return (
-    <footer className='mt-auto w-full'>
+    <footer className='my-2 w-full'>
       <div className='container py-4'>
-        <div className='layout mb-2 flex items-center justify-center'>
+        <div className='my-2 flex items-center justify-center'>
           <MadeWithTija />
         </div>
-        <div className='layout flex items-center justify-center'>
+        <div className='flex items-center justify-center'>
           <div className='text-xs text-white'>
             Proudly created by{' '}
             <a
@@ -30,7 +30,7 @@ const Footer: React.FC<Props> = () => {
                 width='0'
                 height='0'
                 sizes='100vw'
-                className='overflow-hidden rounded-full mx-1'
+                className='mx-1 overflow-hidden rounded-full'
                 style={{ width: 18, height: 'auto' }}
               />
               ivrusson
