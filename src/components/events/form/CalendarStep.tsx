@@ -61,12 +61,12 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
       leaveFrom='transform scale-100 opacity-100'
       leaveTo='transform scale-95 opacity-0'
     >
-      <div className='mx-auto my-8 w-full'>
+      <div className='mx-auto w-full'>
         <div className='bodergray-200 rounded-lg border bg-white p-4 shadow-lg'>
           <div className='grid grid-cols-12 gap-2'>
             <div className='relative col-span-12 md:col-span-4'>
               <EventInfo event={event} />
-              <div className='absolute right-0 top-0 h-full w-[1px] bg-gray-200  hidden md:visible' />
+              <div className='absolute right-0 top-0 hidden h-full w-[1px]  bg-gray-200 md:visible' />
             </div>
             <div className='relative col-span-12 p-2 md:col-span-5'>
               <Calendar
@@ -117,7 +117,7 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
                 onChange={onDateChange}
                 disabledDate={disableDate}
               />
-              <div className='absolute right-0 top-0 h-full w-[1px] bg-gray-200  hidden md:visible' />
+              <div className='absolute right-0 top-0 hidden h-full w-[1px]  bg-gray-200 md:visible' />
             </div>
             <div className='relative col-span-12 h-36 pl-2 md:col-span-3 md:h-full'>
               <div className='relative mb-4 flex h-full w-full items-center justify-center'>
@@ -173,7 +173,7 @@ const CalendarStep = ({ csrfToken, event, onSubmit }: Props) => {
               </div>
             </div>
             <div className='col-span-12 pt-2'>
-              <div className='flex flex-col-reverse md:flex-row items-center justify-between'>
+              <div className='flex flex-col-reverse items-center justify-between md:flex-row'>
                 <Share event={event} />
                 <Button
                   className='min-w-[calc(25%)]'
