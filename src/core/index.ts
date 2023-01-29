@@ -48,6 +48,18 @@ export class TijaModule {
     };
   }
 
+  public apiRouter() {
+    return async (req: NextTijaRequest, res: NextTijaResponse) => {
+      // await csrf(req, res);
+      const name = req.url.split('/')[2];
+      const mod = this.pMap.get(name);
+      if (mod) {
+        return createHandler(mod.controller)(req, res);
+      }
+      res.status(404).json({ message: 'Not found' });
+    };
+  }
+
   public service() {
     return (name: string) => {
       const mod = this.pMap.get(name);
@@ -88,4 +100,6 @@ const tijaModule = TijaModule.getInstance([
 ]);
 
 export const tijaRouter = tijaModule.router();
+
+export const tijaApiRouter = tijaModule.apiRouter();
 export const tijaService = tijaModule.service();
