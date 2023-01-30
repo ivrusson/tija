@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 
+const env = process.env.NODE_ENV || 'development';
+
 const parseNotionConfig = (pages) => {
   const TEXT_TYPES = ['Site', 'Theme', 'Shop'];
   const DB_TYPES = ['Database'];
@@ -35,26 +37,41 @@ const parseNotionConfig = (pages) => {
   return config;
 };
 
+const fechNotionGlobalDatabase = async () => {
+  try {
+    const { Client } = await import('@notionhq/client');
+    const notion = new Client({ auth: process.env.NEXT_NOTION_API_SECRET });
+    const response = await notion.databases.query({
+      database_id: process.env.NOTION_GLOBAL_CONFIG_DB,
+      sorts: [
+        {
+          property: 'Type',
+          direction: 'ascending',
+        },
+      ],
+    });
+    return response;
+  } catch (e) {
+    return {};
+  }
+}
+
 const getTijaConfig = async () => {
-  const { Client } = await import('@notionhq/client');
-  const notion = new Client({ auth: process.env.NEXT_NOTION_API_SECRET });
-  const response = await notion.databases.query({
-    database_id: process.env.NOTION_GLOBAL_CONFIG_DB,
-    sorts: [
-      {
-        property: 'Type',
-        direction: 'ascending',
-      },
-    ],
-  });
+
+  // This helps to solve testing problems with jest
+  if (env === 'test') {
+    return {};
+  }
+
+  const response = await fechNotionGlobalDatabase();
 
   if (response.results && Array.isArray(response.results)) {
     const config = parseNotionConfig(response?.results);
     return config;
   }
+
   return {};
 };
-
 module.exports = async () => ({
   eslint: {
     dirs: ['src'],

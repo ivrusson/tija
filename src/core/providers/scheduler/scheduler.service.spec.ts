@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import dayjs from 'dayjs';
+
 import { ConfigService } from '@/core/config/config.service';
 
 import {
@@ -72,12 +74,18 @@ class MockConfigService extends ConfigService {
   constructor() {
     super();
   }
-  get() {
-    return {};
+  get(name: string) {
+    return name ? null : null;
   }
 }
 
+
 const configService = new MockConfigService();
+
+const getTimeStamp = (day: string, hour: string) => {
+
+  return dayjs(`${day} ${hour}`).utc().valueOf();
+};
 
 describe('scheduler service test', () => {
   const schedulerService = new SchedulerService(
@@ -89,15 +97,10 @@ describe('scheduler service test', () => {
   );
 
   it('should return and array of times', () => {
+
     const DATE_STR = '2023-01-15';
     const START_DATE_STR = '2023-01-10 10:00';
     const END_DATE_STR = '2023-01-15 12:00';
-
-    const getTimeStamp = (hour: string) => {
-      const splitDate = DATE_STR.split('-').map(n => parseInt(n));
-      const hourDate = hour.split(':').map(n => parseInt(n));
-      new Date(Date.UTC(splitDate[0], splitDate[1], splitDate[2], hourDate[0], hourDate[1])).getTime()
-    }
 
     const EXPECTED_ARRAY = [
       '10:00',
@@ -108,7 +111,7 @@ describe('scheduler service test', () => {
       '11:15',
       '11:30',
       '11:45',
-    ].map(n => getTimeStamp(n));
+    ].map(n => getTimeStamp(DATE_STR, n));
 
     const times = schedulerService.buildHours(DATE_STR, START_DATE_STR, END_DATE_STR);
 
@@ -116,8 +119,9 @@ describe('scheduler service test', () => {
   });
 
   it('should return a valid date string', () => {
-    const DATE_STR = '2023/01/10 10:00';
 
+
+    const DATE_STR = '01/10/2023';
     const EXPECTED_DATE = '2023-01-10';
 
     const date = schedulerService.getDateString(DATE_STR);
@@ -132,7 +136,7 @@ describe('scheduler service test', () => {
       startDate: START_DATE,
       endDate: END_DATE,
       dates: [
-        { date: '2023-01-10', times: BASE_HOURS },
+        { date: '2023-01-10', times: BASE_HOURS.map(n => getTimeStamp('2023-01-10', n)) },
         { date: '2023-01-11', times: [] },
         {
           date: '2023-01-12',
@@ -145,9 +149,9 @@ describe('scheduler service test', () => {
             '13:15',
             '13:30',
             '13:45',
-          ],
+          ].map(n => getTimeStamp('2023-01-12', n)),
         },
-        { date: '2023-01-13', times: BASE_HOURS },
+        { date: '2023-01-13', times: BASE_HOURS.map(n => getTimeStamp('2023-01-13', n)) },
         { date: '2023-01-14', times: [] }, // Is saturday and is disabled
         { date: '2023-01-15', times: [] }, // Is sunday and is disabled
       ],

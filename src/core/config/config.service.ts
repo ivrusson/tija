@@ -6,10 +6,10 @@ export class ConfigService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private config: any;
   constructor() {
-    const { serverRuntimeConfig } = getConfig();
+    const { serverRuntimeConfig } = getConfig() || {};
     this.config = {
-      ...serverRuntimeConfig.notionConfig,
-      ...serverRuntimeConfig.tijaConfig,
+      ...(serverRuntimeConfig?.notionConfig || {}),
+      ...(serverRuntimeConfig?.tijaConfig || {}),
     };
   }
 
