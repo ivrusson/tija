@@ -11,13 +11,13 @@ import { BookingRepository } from './booking.repository';
 export class BookingService {
   constructor(private readonly bookingRepository: BookingRepository, private oderRepository: OrderRepository, private pipeDreamService: PipeDreamService) { }
 
-  async createBooking(data: any): Promise<any> {
+  async createBooking(data: any, baseUrl: string): Promise<any> {
     let order = null;
     if (data.product) {
       order = await this.oderRepository.createOrder(data);
     }
     const result = await this.bookingRepository.createBooking({ ...data, order });
-    const url = data.baseUrl + "/bookings/" + result.id
+    const url = baseUrl + "/bookings/" + result.id
 
     if (result) {
       this.pipeDreamService.run('Bookings:after-create', { ...result, url });
@@ -31,8 +31,14 @@ export class BookingService {
     return result;
   }
 
-  async updateBooking(bookingId: string, data: UpdateBookingDto): Promise<any> {
-    return {};
+  async updateBooking(bookingId: string, data: UpdateBookingDto, baseUrl: string): Promise<any> {
+    const result = await this.bookingRepository.updateBooking(bookingId, data);
+    const url = baseUrl + "/bookings/" + result.id
+
+    if (result) {
+      this.pipeDreamService.run('Bookings:after-update', { ...result, url });
+    }
+    return result;
   }
 
 }
