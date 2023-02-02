@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Body, Header, Post, Request } from 'next-api-decorators';
+import { Body, Post, Request } from 'next-api-decorators';
 
 import { tijaService } from '@/core';
+import urlFromRequest from '@/core/common/utils/url-from-request';
 import { PaymentService } from '@/core/modules/payments/payment.service';
+import type { NextTijaRequest } from '@/core/types';
 
 
 export class PaymentController {
@@ -11,13 +13,9 @@ export class PaymentController {
   ) { }
 
   @Post('/payment-link')
-  public getPaymentLink(@Request() req: any, @Header('host') host: string, @Body() body: any) {
+  public getPaymentLink(@Request() req: NextTijaRequest, @Body() body: any) {
     const { bookingId, priceId } = body;
-    const protocol =
-      req.headers["x-forwarded-proto"] || req.connection.encrypted
-        ? "https"
-        : "http";
-    const baseUrl = `${protocol}://${host}`;
+    const baseUrl = urlFromRequest(req);
 
     return this.paymentService.getPaymentLink({ bookingId, priceId, baseUrl });
   }

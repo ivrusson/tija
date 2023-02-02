@@ -56,6 +56,48 @@ const fechNotionGlobalDatabase = async () => {
   }
 }
 
+const fechAutomationsDatabase = async (databaseId) => {
+  try {
+    const { Client } = await import('@notionhq/client');
+    const notion = new Client({ auth: process.env.NEXT_NOTION_API_SECRET });
+    const response = await notion.databases.query({
+      database_id: databaseId,
+      sorts: [
+        {
+          property: 'Database',
+          direction: 'ascending',
+        },
+      ],
+    });
+    return response;
+  } catch (e) {
+    return {};
+  }
+}
+
+const getAutomationsConfig = async (databaseId) => {
+  // This helps to solve testing problems with jest
+  if (env === 'test') {
+    return {};
+  }
+
+  const response = await fechAutomationsDatabase(databaseId);
+
+  if (response.results && Array.isArray(response.results)) {
+    const automations = {};
+    for (let i = 0; i < response.results.length; i++) {
+      const result = response.results[i];
+      const databaseName = result.properties?.Database?.select?.name || '';
+      const action = result.properties?.Action?.select?.name ? result.properties.Action.select.name.toLowerCase().replace(' ', '-') : '';
+      const webhook = result.properties.Webhook?.url || '';
+      automations[`${databaseName}:${action}`] = webhook
+    }
+    return automations;
+  }
+
+  return {};
+}
+
 const getTijaConfig = async () => {
 
   // This helps to solve testing problems with jest
@@ -67,11 +109,19 @@ const getTijaConfig = async () => {
 
   if (response.results && Array.isArray(response.results)) {
     const config = parseNotionConfig(response?.results);
+    if (config.DB_AUTOMATIONS) {
+      const automations = await getAutomationsConfig(config.DB_AUTOMATIONS);
+      return {
+        ...config,
+        automations,
+      };
+    }
     return config;
   }
 
   return {};
 };
+
 module.exports = async () => ({
   eslint: {
     dirs: ['src'],
