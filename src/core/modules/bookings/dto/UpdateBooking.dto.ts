@@ -1,10 +1,7 @@
 import { Type } from "class-transformer";
-import { IsEnum, IsString, ValidateNested } from "class-validator";
+import { IsString, ValidateNested } from "class-validator";
 
-enum StatusBookingUpdate {
-  InProgress = "In Progress",
-  Cancelled = 'Cancelled',
-}
+type StatusBookingUpdate = 'In Progress' | 'Cancelled';
 
 class DateBookingUpdate {
   @IsString()
@@ -16,10 +13,13 @@ class DateBookingUpdate {
 }
 
 export class UpdateBookingDto {
-  @IsEnum(StatusBookingUpdate)
-  status?: string;
+  Status?: {
+    status: {
+      name: StatusBookingUpdate;
+    };
+  };
 
   @ValidateNested()
   @Type(() => DateBookingUpdate)
-  date?: DateBookingUpdate
+  Date?: DateBookingUpdate
 }

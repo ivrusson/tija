@@ -33,10 +33,12 @@ export class BookingService {
 
   async updateBooking(bookingId: string, data: UpdateBookingDto, baseUrl: string): Promise<any> {
     const result = await this.bookingRepository.updateBooking(bookingId, data);
-    const url = baseUrl + "/bookings/" + result.id
 
     if (result) {
+      const url = baseUrl + "/bookings/" + result.id;
       this.pipeDreamService.run('Bookings:after-update', { ...result, url });
+
+      return { ...result, url };
     }
     return result;
   }

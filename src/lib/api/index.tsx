@@ -60,6 +60,17 @@ export const createBooking = async (data: any, options: any) => {
   });
 };
 
+// eslint-disable-next-line unused-imports/no-unused-vars
+export const cancelBooking = async (bookingId: string, options: any) => {
+  return await request({
+    path: `/api/bookings/${bookingId}/cancelled`,
+    method: 'POST',
+    headers: {
+      'CSRF-Token': options.csrfToken,
+    },
+  });
+};
+
 export const getPaymentLink = async (data: any, options: any) => {
   return await request({
     path: `/api/payments/payment-link`,
