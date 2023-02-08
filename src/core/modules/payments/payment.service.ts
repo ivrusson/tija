@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Service } from 'typedi';
 
-import { PaymentGatewayService } from '@/core/providers/payment-gateway/payment-gateway.service';
+import { PaymentGatewayService } from '@/core/services/payment-gateway/payment-gateway.service';
 
 @Service()
 export class PaymentService {
