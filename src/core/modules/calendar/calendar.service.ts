@@ -6,7 +6,7 @@ import { WorkingPlanRepository } from '@/core/modules/working-plans/working-plan
 import pageMapper from '@/core/providers/notion/helpers/pageMapper';
 import {
   SchedulerService,
-} from '@/core/providers/scheduler/scheduler.service';
+} from '@/core/services/scheduler/scheduler.service';
 
 import { ConfigService } from '../../config/config.service';
 

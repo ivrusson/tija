@@ -6,7 +6,7 @@ import { useEffect, useReducer } from 'react';
 
 import { getCalendar } from '@/lib/api';
 
-import { SchedulerItem } from '../core/providers/scheduler/scheduler.service';
+import { SchedulerItem } from '../core/services/scheduler/scheduler.service';
 
 dayjs.extend(isToday);
 
