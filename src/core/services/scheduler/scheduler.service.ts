@@ -121,9 +121,35 @@ export class SchedulerService {
       return item;
     });
 
-    dates = this.removeBookingFromDates(dates)
+    dates = this.removeBookingFromDates(dates);
+
+    dates = this.removeTodayPassedTimes(dates);
 
     return this.buildSchedulerOutput(dates);
+  }
+
+  public removeTodayPassedTimes(dates: SchedulerItem[]): SchedulerItem[] {
+    const cleaned_dates = dates;
+    const now = dayjs().utc();
+    const today = now.format('YYYY-MM-DD');
+
+    for (let i = 0; i < cleaned_dates.length; i++) {
+      const day = cleaned_dates[i];
+
+      if (day.date === today) {
+        const valid_times: number[] = [];
+        const day_times = day.times;
+        for (let j = 0; j < day_times.length; j++) {
+          if (day_times[j] > now.valueOf()) {
+            valid_times.push(day_times[j]);
+          }
+        }
+
+        cleaned_dates[i].times = valid_times;
+      }
+    }
+
+    return cleaned_dates;
   }
 
   public removeBookingFromDates(dates: SchedulerItem[]): SchedulerItem[] {
