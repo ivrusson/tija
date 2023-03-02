@@ -16,7 +16,7 @@ const parseNotionConfig = (pages) => {
     // Get the key key value
     key = properties.Key.rich_text[0]?.plain_text;
     // Get the type for parse correct data
-    type = properties.Type.select.name;
+    type = properties.Type?.select?.name;
 
     // Now can get the corrent value object
     const value_data = properties.Value;
